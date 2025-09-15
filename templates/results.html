@@ -10,6 +10,11 @@
                     <input name="login" id="login" hidden>
                     <input type="submit" name="submit" id="submit" value="Log Out">
                 </form>
+
+                <form action="/" method="post">
+                    <input name="search" id="search" hidden>
+                    <input type="submit" name="submit" id="submit" value="Search">
+                </form>
         
             {% else %}
                 <form action="/login" method="post">
