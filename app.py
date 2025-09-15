@@ -49,7 +49,7 @@ def initialize_db():
                     id SERIAL PRIMARY KEY,
                     user_id INTEGER NOT NULL,
                     ticker TEXT NOT NULL,
-                    longName TEXT NOT NULL,
+                    long_name TEXT NOT NULL,
                     industry TEXT NOT NULL,
                     forward_pe REAL,
                     book_value Real,
