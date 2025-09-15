@@ -25,15 +25,18 @@ footer {
     text-align: left;
 }
 
-.nav {
-    display: flex;
-    justify-content: space-between;
+.top {
     background-color: rgb(20, 20, 20);
     margin-left: 2px;
     margin-right: 2px;
     padding-left: 2px;
     padding-right: 2px;
     border-radius: 10px;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
 }
 
 h1 {
