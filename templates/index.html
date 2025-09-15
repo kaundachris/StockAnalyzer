@@ -1,36 +1,32 @@
 {% extends "base.html" %}
 
 {% block header %}
+    <h1>Golconda</h1>
+
     <div class="nav">
-        <div>
-            <h1>Golconda</h1>
-        </div>
-
         <div class="links">
-            {% if logged_in %}
-
-                <form action="/history" method="post">
-                    <input name="register" id="register" hidden>
-                    <input type="submit" name="submit" id="submit" value="Previous Searches">
-                </form>
-                
-                <form action="/logout" method="post">
-                    <input name="login" id="login" hidden>
-                    <input type="submit" name="submit" id="submit" value="Log Out">
-                </form>
+        {% if logged_in %}
+            <form action="/history" method="post">
+                <input name="register" id="register" hidden>
+                <input type="submit" name="submit" id="submit" value="Previous Searches">
+            </form>
             
-            {% else %}
-                <form action="/login" method="post">
-                    <input name="login" id="login" hidden>
-                    <input type="submit" name="submit" id="submit" value="Log In">
-                </form>
+            <form action="/logout" method="post">
+                <input name="login" id="login" hidden>
+                <input type="submit" name="submit" id="submit" value="Log Out">
+            </form>
+        
+        {% else %}
+            <form action="/login" method="post">
+                <input name="login" id="login" hidden>
+                <input type="submit" name="submit" id="submit" value="Log In">
+            </form>
 
-                <form action="/register" method="post">
-                    <input name="register" id="register" hidden>
-                    <input type="submit" name="submit" id="submit" value="Register">
-                </form>
-            {% endif %}
-        </div>
+            <form action="/register" method="post">
+                <input name="register" id="register" hidden>
+                <input type="submit" name="submit" id="submit" value="Register">
+            </form>
+        {% endif %}
     </div>
 {% endblock %}
 
