@@ -77,7 +77,7 @@ def searches():
         return []
     with get_db() as db:
         # get searches related to the user id
-        cursor = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cursor = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("SELECT * FROM searches WHERE user_id = %s", (session["user_id"],))
         results = cursor.fetchall()
         return results

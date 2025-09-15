@@ -55,7 +55,7 @@
                         <td>{{ company.priceToBook }}</td>
                         <td>{{ company.quickRatio }}</td>
                         <td>{{ company.currentRatio }}</td>
-                        <td>{{ "${:,.2f}".format(company["freeCashflow"]) }}</td>
+                        <td>{{ "${:,.2f}".format(stock_data.freeCashflow) }}</td>
                         <td>
                             <form action="/update" method="post">
                                 <input name="update" id="update" hidden value="{{ company.ticker }}">
@@ -67,5 +67,4 @@
             </tbody>
         </table>
     </div>
-
 {% endblock %}
