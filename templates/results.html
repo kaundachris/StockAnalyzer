@@ -38,19 +38,19 @@
         <i><strong>NB: </strong>Not necessarily an important number, but good to know. Compare this number to other companies in the industry to determine if this is good or bad.</i>
         <br><br>
         <p>👉👉It has a Forward Price to Earnings ratio of <strong>{{ stock_data.forward_pe }}</strong>.</p>
-        <i><strong>NB: </strong>This means that it will take the company {{ stock_data.forwardPE }} years to earn you the equivalent of the price paid for your shares. If this number is negative, the company is actually making losses!</i>
+        <i><strong>NB: </strong>This means that it will take the company {{ stock_data.forward_pe }} years to earn you the equivalent of the price paid for your shares. If this number is negative, the company is actually making losses!</i>
         <br><br>
         <p>👉👉The company's earnings grew at <strong>{{ stock_data.earnings_growth }}%</strong> over the last year.</p>
         <i><strong>NB: </strong>Compare this number to other companies in the industry to determine if this is good or bad.</i>
         <br><br>
         <p>👉👉The Profit Margin for the company was <strong>{{ stock_data.profit_margins }}%</strong>.</p>
-        <i><strong>NB: </strong>This means that for every $100 the company makes, it keeps {{ "${:,.2f}".format(stock_data.profitMargins) }}.</i>
+        <i><strong>NB: </strong>This means that for every $100 the company makes, it keeps {{ "${:,.2f}".format(stock_data.profit_margins) }}.</i>
         <br><br>
         <p>👉👉It has a Book Value of <strong>{{ stock_data.book_value }}</strong>.</p>
         <i><strong>NB: </strong>Important in comparison to the market capitalization, but you this is covered in the next note!</i>
         <br><br>
         <p>👉👉It's Price to Book Ratio is <strong>{{ stock_data.price_book }}</strong></p>
-        <i><strong>NB: </strong>This means that for every $100 dollars you pay for the company's stock, you get {{ "${:,.2f}".format(100/stock_data.priceToBook) }} in actual backed assets</i>
+        <i><strong>NB: </strong>This means that for every $100 dollars you pay for the company's stock, you get {{ "${:,.2f}".format(100/stock_data.price_book) }} in actual backed assets</i>
         <br><br>
         <p>👉👉The company's Quick Ratio is <strong>{{ stock_data.quick_ratio }}</strong></p>
         <i><strong>NB: </strong>A quick ratio of above 1 indicates the ability of the company to pay out it's short term debts without having to sell any short term assets</i>
