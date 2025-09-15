@@ -129,6 +129,7 @@ def store_data(data: dict):
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev")
+initialize_db()
 
 
 @app.template_filter("currency")
@@ -312,5 +313,4 @@ def logout():
 
 
 if __name__ == "__main__":
-    initialize_db()
     app.run(debug=True)
