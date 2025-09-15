@@ -70,6 +70,13 @@ def initialize_db():
 
 
 
+def format_currency(value):
+    if value is None:
+        return "N/A"
+    return "${:,.2f}".format(value)
+
+
+
 # get all the search data to populate the history page
 def searches():
     # ensure user is logged in
@@ -79,6 +86,8 @@ def searches():
         # get searches related to the user id
         cursor = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cursor.execute("SELECT * FROM searches WHERE user_id = %s", (session["user_id"],))
+        for item in cursor.fetchall():
+            item["freeCashflow"] = format_currency(item["freeCashflow"])
         return cursor.fetchall()
 
         
