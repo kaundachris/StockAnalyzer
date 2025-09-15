@@ -1,6 +1,11 @@
 from flask import Flask, render_template, request, redirect, session
 from stockdata import Stock
-import sqlite3, bcrypt, os
+import bcrypt
+import os
+import psycopg2
+import psycopg2.extras
+
+
 
 # check that the password is at least 6 characters long, contains at least one char, and one number
 def check_password(password):
@@ -22,41 +27,48 @@ def check_password(password):
     return False
 
 
+
 # create a database connection
 def get_db():
-    connection = sqlite3.connect("fundamentals.db")
-    connection.row_factory = sqlite3.Row
-    return connection
+    url = os.environ.get("DATABASE_URL")
+    if url and url.startswith("postgres://"):
+        url = url.replace("postgres://", "postgresql://", 1)
+    return psycopg2.connect(url)
+
+
 
 def initialize_db():
     with get_db() as db:
+        cursor = db.cursor()
         # create the users table
-        db.execute("""CREATE TABLE IF NOT EXISTS users(
-                   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                   username TEXT NOT NULL UNIQUE,
-                   hash TEXT NOT NULL)
-                   """)
+        cursor.execute("""CREATE TABLE IF NOT EXISTS users(
+                       id SERIAL PRIMARY KEY,
+                       username TEXT NOT NULL UNIQUE,
+                       password_hash TEXT NOT NULL)
+                       """)
         
         # create the history table
-        db.execute("""CREATE TABLE IF NOT EXISTS searches(
-                   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                   user_id INTEGER NOT NULL,
-                   ticker TEXT NOT NULL,
-                   longName TEXT NOT NULL,
-                   industry TEXT NOT NULL,
-                   forwardPE REAL,
-                   bookValue Real,
-                   earningsGrowth REAL,
-                   profitMargins REAL,
-                   marketCap REAL,
-                   priceToBook REAL,
-                   quickRatio REAL,
-                   currentRatio REAL,
-                   freeCashflow REAL,
-                   FOREIGN KEY(user_id) REFERENCES users(id),
-                   UNIQUE(user_id, longName)
-                   )""")
+        cursor.execute("""CREATE TABLE IF NOT EXISTS searches(
+                       id SERIAL PRIMARY KEY,
+                       user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                       ticker TEXT NOT NULL,
+                       longName TEXT NOT NULL,
+                       industry TEXT NOT NULL,
+                       forwardPE REAL,
+                       bookValue Real,
+                       earningsGrowth REAL,
+                       profitMargins REAL,
+                       marketCap REAL,
+                       priceToBook REAL,
+                       quickRatio REAL,
+                       currentRatio REAL,
+                       freeCashflow REAL,
+                       UNIQUE(user_id, longName)
+                       )
+                       """)
         db.commit()
+
+
 
 # get all the search data to populate the history page
 def searches():
@@ -64,8 +76,12 @@ def searches():
     if "user_id" not in session:
         return []
     with get_db() as db:
-        #get searches related to the user id
-        return db.execute("SELECT * FROM searches WHERE user_id = ?", (session["user_id"],)).fetchall()
+        # get searches related to the user id
+        cursor = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cursor.execute("SELECT * FROM searches WHERE user_id = %s", (session["user_id"],))
+        return cursor.fetchall()
+
+        
     
 # to determine which link to show in the navigation
 def status():
@@ -76,6 +92,7 @@ def status():
     return logged_in
 
 
+
 # retreive stock data and store in a usable format
 def retrieve_stock_data(ticker:str):
     try:
@@ -83,7 +100,7 @@ def retrieve_stock_data(ticker:str):
     except Exception:
         return None 
 
-    #store the data for rendering
+    # store the data for rendering
     stock_data = {}
     stock_data["ticker"] = ticker
     stock_data["longName"] = stock.company_name()
@@ -99,19 +116,26 @@ def retrieve_stock_data(ticker:str):
     stock_data["freeCashflow"] = stock.company_free_cashflow()
     return stock_data
 
+
+
 # store data in database
 def store_data(data:dict):
     # store this in the database
     with get_db() as db:
-        db.execute("DELETE FROM searches WHERE ticker = ? AND user_id = ?", (data["ticker"], session["user_id"]))
-        db.execute('''INSERT INTO searches (user_id, ticker, longName, industry, forwardPE, earningsGrowth, profitMargins, marketCap, bookValue, priceToBook, quickRatio, currentRatio, freeCashflow) 
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', 
+        cursor = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cursor.execute("DELETE FROM searches WHERE longName = %s AND user_id = %s", (data["longName"], session["user_id"]))
+        cursor.execute('''INSERT INTO searches (user_id, ticker, longName, industry, forwardPE, earningsGrowth, profitMargins, marketCap, bookValue, priceToBook, quickRatio, currentRatio, freeCashflow) 
+                   VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)''', 
                    (session["user_id"], data["ticker"], data["longName"], data["industry"], data["forwardPE"], data["earningsGrowth"], data["profitMargins"], data["marketCap"],
                     data["bookValue"], data["priceToBook"], data["quickRatio"], data["currentRatio"], data["freeCashflow"]))
         db.commit()
 
+
+
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev")
+
+
 
 @app.route("/", methods=["GET","POST"])
 def index():
@@ -137,6 +161,8 @@ def index():
 
     return render_template("results.html", stock_data=stock_data, logged_in=status())
 
+
+
 @app.route("/login", methods=["GET","POST"])
 def login():
     # if from other page
@@ -156,17 +182,21 @@ def login():
     
     with get_db() as db:
         # check that the username exists in database
-        user = db.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
+        cursor = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+        user = cursor.fetchone()
         if not user:
             return render_template("login.html", message="You are not registered. Click on the register button above to register!")
         
-        #check that the password matches
-        if not bcrypt.checkpw(password.encode("utf-8"), user["hash"].encode("utf-8")):
+        # check that the password matches
+        if not bcrypt.checkpw(password.encode("utf-8"), user["password_hash"].encode("utf-8")):
             return render_template("login.html", message="Invalid password!")
         
         # Set user_id in session after successful login
         session["user_id"] = user["id"]
         return redirect("/history")
+
+
 
 @app.route("/register", methods=["GET","POST"])    
 def register():
@@ -185,7 +215,7 @@ def register():
     if not password:
         return render_template("register.html", message="Please enter a password!")
     
-    #check that the confirm password field is not empty
+    # check that the confirm password field is not empty
     confirm_password = request.form.get("confirm_password")
     if not confirm_password:
         return render_template("register.html", message="Please confirm your password!")
@@ -199,7 +229,9 @@ def register():
 
     with get_db() as db:
         # check that the username does not exist in database
-        user = db.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
+        cursor = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+        user = cursor.fetchone()
         if user:
             return render_template("register.html", message="Username exists! Log in please.")
         
@@ -207,19 +239,24 @@ def register():
         hash_pw = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
 
         # add the user to the database 
-        db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", (username, hash_pw.decode("utf-8")))
+        cursor.execute("INSERT INTO users (username, password_hash) VALUES (%s, %s)", (username, hash_pw.decode("utf-8")))
         db.commit()
 
         # get user's id
-        user = db.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
+        cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+        user = cursor.fetchone()
+        if not user:
+            return render_template("login.html", message="Log in to save your searches" )
 
         # Set user_id in session after successful login
         session["user_id"] = user["id"]
         return redirect("/history")
 
+
+
 @app.route("/history", methods=["GET","POST"])
 def history():
-    #check that the user is logged in
+    # check that the user is logged in
     if "user_id" not in session:
         return render_template("login.html", message="Log in to save your searches" )
     
@@ -232,7 +269,7 @@ def history():
     if not stock:
         return render_template("history.html", history=searches())
     
-    #retrieve its data
+    # retrieve its data
     stock_data = retrieve_stock_data(stock)
     if not stock_data:
         return render_template("history.html", history=searches(), message="Could not find the ticker's data. Please make sure you enter a valid ticker!", logged_in=status())
@@ -243,9 +280,11 @@ def history():
     # render the page with the new entry
     return render_template("history.html", history=searches())
 
+
+
 @app.route("/update", methods=["POST"])
 def update():
-    #check that the user is logged in
+    # check that the user is logged in
     if "user_id" not in session:
         return render_template("login.html", message="Log in to save your searches" )
     
@@ -268,14 +307,18 @@ def update():
     # render the page with the new entry
     return render_template("history.html", history=searches(), message="Data updated!")
 
+
+
 @app.route("/logout", methods=["GET","POST"])
 def logout():
-    #clear the session data
+    # clear the session data
     session.clear()
 
-    #redirect to the login page
+    # redirect to the login page
     return redirect("/login")
+
+
 
 if __name__ == "__main__":
     initialize_db()
-    app.run(debug=True)
+    app.run()
