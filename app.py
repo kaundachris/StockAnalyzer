@@ -70,6 +70,7 @@ def initialize_db():
 
 
 
+# formats the numbers into readable format
 def format_currency(value):
     if value is None:
         return "N/A"
