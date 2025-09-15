@@ -75,21 +75,6 @@ It allows for the results to be dynamically inserted into the results of each se
 - `index.css`: Handles all styling including dark theme, responsive design, and table layouts.
 - `index.js`: Manages dynamic content updates particularly for the date functionality in the page's footer
 
-## Setup & Installation
-1. Clone the repository
-2. Install required packages:
-```bash
-pip install -r requirements.txt
-```
-3. Set up environment variables:
-```bash
-export SECRET_KEY="your_secret_key"
-```
-4. Run the application:
-```bash
-python app.py
-```
-
 ## Database Structure
 The application uses SQLite with two main tables:
 - users: Stores user authentication data
@@ -130,6 +115,21 @@ The application uses SQLite with two main tables:
 - Minimal API calls through data caching
 - Efficient database queries
 - Compressed static assets
+
+## Setup & Installation
+1. Clone the repository
+2. Install required packages:
+```bash
+pip install -r requirements.txt
+```
+3. Set up environment variables:
+```bash
+export SECRET_KEY="your_secret_key"
+```
+4. Run the application:
+```bash
+python app.py
+```
 
 ## Testing
 ```bash
