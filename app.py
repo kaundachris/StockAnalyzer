@@ -41,7 +41,7 @@ def initialize_db():
             db.execute("""CREATE TABLE IF NOT EXISTS users(
                     id SERIAL PRIMARY KEY,
                     username TEXT NOT NULL UNIQUE,
-                    hash TEXT NOT NULL)
+                    password_hash TEXT NOT NULL)
                     """)
 
             # create the history table
@@ -182,7 +182,7 @@ def login():
                 return render_template("login.html", message="You are not registered. Click on the register button above to register!")
 
             # check that the password matches
-            if not bcrypt.checkpw(password.encode("utf-8"), user["hash"].encode("utf-8")):
+            if not bcrypt.checkpw(password.encode("utf-8"), user["password_hash"].encode("utf-8")):
                 return render_template("login.html", message="Invalid password!")
 
             # Set user_id in session after successful login
@@ -231,7 +231,7 @@ def register():
             hash_pw = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
 
             # add the user to the database
-            db.execute("INSERT INTO users (username, hash) VALUES (%s, %s)",
+            db.execute("INSERT INTO users (username, password_hash) VALUES (%s, %s)",
                     (username, hash_pw.decode("utf-8")))
 
             # get user's id
