@@ -3,18 +3,18 @@
 {% block header %}
     <div class="nav">
         <div>
-            Golconda
+            <h1>Golconda</h1>
         </div>
 
         <div class="links">
             <form action="/" method="post">
                 <input name="search" id="search" hidden>
-                <input type="submit" name="nav_buttons" id="nav_buttons" value="Search">
+                <input type="submit" name="submit" id="submit" value="Search">
             </form>
 
             <form action="/login" method="post">
                 <input name="register" id="register" hidden>
-                <input type="submit" name="nav_buttons" id="nav_buttons" value="Log In">
+                <input type="submit" name="submit" id="submit" value="Log In">
             </form>
         </div>
     </div>
