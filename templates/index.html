@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
 {% block header %}
-    <div class="top_page">
+    <div class="nav">
         <div>
             <h1>Stock Analyzer</h1>
         </div>
 
-        <div class="nav">
+        <div class="links">
             {% if logged_in %}
 
                 <form action="/history" method="post">

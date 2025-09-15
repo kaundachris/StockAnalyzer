@@ -6,7 +6,7 @@
             <h1>Stock Analyzer</h1>
         </div>
 
-        <div class="nav">
+        <div class="links">
             {% if logged_in %}
                 <form action="/logout" method="post">
                     <input name="login" id="login" hidden>
@@ -29,36 +29,36 @@
 {% endblock %}
 
 {% block main %}
-    <h1>Company: {{ stock_data.longName }}</h1>
+    <h1>Company: {{ stock_data.long_name }}</h1>
     <div class="notes">
         <h3>Notes:</h3>
         <p>👉👉This company operates in the <strong>{{ stock_data.industry }}</strong> industry.</p>
         <br>
-        <p>👉👉It has a Market Capitalization of <strong>{{ "${:,.2f}".format(stock_data.marketCap) }}</strong>.</p>
+        <p>👉👉It has a Market Capitalization of <strong>{{ "${:,.2f}".format(stock_data.market_cap) }}</strong>.</p>
         <i><strong>NB: </strong>Not necessarily an important number, but good to know. Compare this number to other companies in the industry to determine if this is good or bad.</i>
         <br><br>
-        <p>👉👉It has a Forward Price to Earnings ratio of <strong>{{ stock_data.forwardPE }}</strong>.</p>
+        <p>👉👉It has a Forward Price to Earnings ratio of <strong>{{ stock_data.forward_pe }}</strong>.</p>
         <i><strong>NB: </strong>This means that it will take the company {{ stock_data.forwardPE }} years to earn you the equivalent of the price paid for your shares. If this number is negative, the company is actually making losses!</i>
         <br><br>
-        <p>👉👉The company's earnings grew at <strong>{{ stock_data.earningsGrowth }}%</strong> over the last year.</p>
+        <p>👉👉The company's earnings grew at <strong>{{ stock_data.earnings_growth }}%</strong> over the last year.</p>
         <i><strong>NB: </strong>Compare this number to other companies in the industry to determine if this is good or bad.</i>
         <br><br>
-        <p>👉👉The Profit Margin for the company was <strong>{{ stock_data.profitMargins }}%</strong>.</p>
+        <p>👉👉The Profit Margin for the company was <strong>{{ stock_data.profit_margins }}%</strong>.</p>
         <i><strong>NB: </strong>This means that for every $100 the company makes, it keeps {{ "${:,.2f}".format(stock_data.profitMargins) }}.</i>
         <br><br>
-        <p>👉👉It has a Book Value of <strong>{{ stock_data.bookValue }}</strong>.</p>
+        <p>👉👉It has a Book Value of <strong>{{ stock_data.book_value }}</strong>.</p>
         <i><strong>NB: </strong>Important in comparison to the market capitalization, but you this is covered in the next note!</i>
         <br><br>
-        <p>👉👉It's Price to Book Ratio is <strong>{{ stock_data.priceToBook }}</strong></p>
+        <p>👉👉It's Price to Book Ratio is <strong>{{ stock_data.price_book }}</strong></p>
         <i><strong>NB: </strong>This means that for every $100 dollars you pay for the company's stock, you get {{ "${:,.2f}".format(100/stock_data.priceToBook) }} in actual backed assets</i>
         <br><br>
-        <p>👉👉The company's Quick Ratio is <strong>{{ stock_data.quickRatio }}</strong></p>
+        <p>👉👉The company's Quick Ratio is <strong>{{ stock_data.quick_ratio }}</strong></p>
         <i><strong>NB: </strong>A quick ratio of above 1 indicates the ability of the company to pay out it's short term debts without having to sell any short term assets</i>
         <br><br>
-        <p>👉👉It has a Current Ratio of <strong>{{ stock_data.currentRatio }}</strong></p>
+        <p>👉👉It has a Current Ratio of <strong>{{ stock_data.current_ratio }}</strong></p>
         <i><strong>NB: </strong>A current ratio of above 1 indicates the ability of the company to pay out it's short term debts without having to sell any long term assets</i>
         <br><br>
-        <p>👉👉It has a Free Cashflow of <strong>{{ "${:,.2f}".format(stock_data.freeCashflow) }}</strong></p>
+        <p>👉👉It has a Free Cashflow of <strong>{{ "${:,.2f}".format(stock_data.free_cashflow) }}</strong></p>
         <i><strong>NB: </strong>This is the money left over after the company pays its:
             <ol>
                 <li>Operating expenses — such as mortgage or rent, payroll, property taxes and inventory costs, and</li>

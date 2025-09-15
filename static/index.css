@@ -1,5 +1,4 @@
 body {
-    margin: auto;
     color: antiquewhite;
     background-color: black;
     padding: 10px;
@@ -26,7 +25,7 @@ footer {
     text-align: left;
 }
 
-.top {
+.nav {
     display: flex;
     justify-content: space-between;
     background-color: rgb(20, 20, 20);
@@ -37,9 +36,9 @@ footer {
     border-radius: 10px;
 }
 
-.nav {
-    margin: 10px;
-    padding: 10px;
+.links {
+    display: flex;
+    justify-content: space-between;
 }
 
 h1 {
