@@ -61,7 +61,7 @@ def initialize_db():
                     current_ratio REAL,
                     free_cashflow REAL,
                     FOREIGN KEY(user_id) REFERENCES users(id),
-                    UNIQUE(user_id, longName)
+                    UNIQUE(user_id, long_name)
                     )""")
 
 
