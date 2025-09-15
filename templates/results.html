@@ -50,7 +50,7 @@
         <i><strong>NB: </strong>Important in comparison to the market capitalization, but you this is covered in the next note!</i>
         <br><br>
         <p>👉👉It's Price to Book Ratio is <strong>{{ stock_data.price_book }}</strong></p>
-        <i><strong>NB: </strong>This means that for every $100 dollars you pay for the company's stock, you get {{ 100 / stock_data.price_book|float | currency }} in actual backed assets</i>
+        <i><strong>NB: </strong>This means that for every $100 dollars you pay for the company's stock, you get {{ (100 / stock_data.price_book|float) | currency }} in actual backed assets</i>
         <br><br>
         <p>👉👉The company's Quick Ratio is <strong>{{ stock_data.quick_ratio }}</strong></p>
         <i><strong>NB: </strong>A quick ratio of above 1 indicates the ability of the company to pay out it's short term debts without having to sell any short term assets</i>
