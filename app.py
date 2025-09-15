@@ -164,7 +164,7 @@ def index():
     
     # retrieve the data
     stock_data = retrieve_stock_data(company)
-    if not stock_data:
+    if stock_data is None:
         return render_template("index.html", message="Could not find the ticker's data. Please make sure you enter a valid ticker!", logged_in=status())
 
     # store the search data
@@ -284,7 +284,7 @@ def history():
     
     # retrieve its data
     stock_data = retrieve_stock_data(stock)
-    if not stock_data:
+    if stock_data is None:
         return render_template("history.html", history=searches(), message="Could not find the ticker's data. Please make sure you enter a valid ticker!", logged_in=status())
 
     # store this in the database
@@ -308,7 +308,7 @@ def update():
     
     # retrieve the data
     stock_data = retrieve_stock_data(stock_to_update)
-    if not stock_data:
+    if stock_data is None:
         return render_template("history.html", history=searches(), message="Could not find the ticker's data. Please make sure you enter a valid ticker!", logged_in=status())
 
     
