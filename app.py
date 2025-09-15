@@ -87,9 +87,10 @@ def searches():
         # get searches related to the user id
         cursor = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cursor.execute("SELECT * FROM searches WHERE user_id = %s", (session["user_id"],))
-        for item in cursor.fetchall():
+        results = cursor.fetchall()
+        for item in results:
             item["freeCashflow"] = format_currency(item["freeCashflow"])
-        return cursor.fetchall()
+        return results
 
         
     
