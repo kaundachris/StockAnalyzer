@@ -55,7 +55,7 @@
                         <td>{{ company.price_book }}</td>
                         <td>{{ company.quick_ratio }}</td>
                         <td>{{ company.current_ratio }}</td>
-                        <td>{{ "${:,.2f}".format(company.free_cashflow) }}</td>
+                        <td>{{ company.free_cashflow | currency }}</td>
                         <td>
                             <form action="/update" method="post">
                                 <input name="update" id="update" hidden value="{{ company.ticker }}">

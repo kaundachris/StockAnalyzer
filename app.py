@@ -131,6 +131,13 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev")
 
 
+@app.template_filter("currency")
+def currency(value):
+    if value is None:
+        return ""
+    return "${:,.2f}".format(value)
+
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "GET":
