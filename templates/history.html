@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <div class="nav">
+        <div>
+            <h1>Stock Analyzer</h1>
+        </div>
+
+        <div class="nav">
+            <form action="/" method="post">
+                <input name="search" id="search" hidden>
+                <input type="submit" name="submit" id="submit" value="Search For a Company">
+            </form>
+
+            <form action="/logout" method="post">
+                <input name="register" id="register" hidden>
+                <input type="submit" name="submit" id="submit" value="Log Out">
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block main %}
+    <br>
+    <br>
+    <h3>Your Previous Queries</h3>
+    <i>To check for new data, click on the update button</i>
+    <br>
+    <br>
+    <P>{{ message }}</P>
+
+    <div class="notes"></div>
+        <table>
+            <thead>
+                <tr>
+                    <td><strong>Company</strong></td>
+                    <td><strong>Price Earnings</strong></td>
+                    <td><strong>Earnings Growth</strong></td>
+                    <td><strong>Profit Margin</strong></td>
+                    <td><strong>PB Value</strong></td>
+                    <td><strong>Quick Ratio</strong></td>
+                    <td><strong>Current Ratio</strong></td>
+                    <td><strong>Free Cashflow</strong></td>
+                    <td><strong>Update Data</strong></td>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for company in history %}
+                    <tr>
+                        <td>{{ company.longName }}</td>
+                        <td>{{ company.forwardPE }}</td>
+                        <td>{{ company.earningsGrowth }}</td>
+                        <td>{{ company.profitMargins }}</td>
+                        <td>{{ company.priceToBook }}</td>
+                        <td>{{ company.quickRatio }}</td>
+                        <td>{{ company.currentRatio }}</td>
+                        <td>{{ "${:,.2f}".format(company.freeCashflow) }}</td>
+                        <td>
+                            <form action="/update" method="post">
+                                <input name="update" id="update" hidden value="{{ company.ticker }}">
+                                <input type="submit" name="submit" id="submit" value="Update">
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

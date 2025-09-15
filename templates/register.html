@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <div class="nav">
+        <div>
+            <h1>Stock Analyzer</h1>
+        </div>
+
+        <div class="nav">
+            <form action="/" method="post">
+                <input name="search" id="search" hidden>
+                <input type="submit" name="submit" id="submit" value="Search">
+            </form>
+
+            <form action="/login" method="post">
+                <input name="register" id="register" hidden>
+                <input type="submit" name="submit" id="submit" value="Log In">
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block main %} 
+    <h1>Enter A Company's Ticker Below</h1>
+    <i>Company should be traded in the US stock market</i>
+
+    <form action="/register" method="post">
+        <div class="forms">
+            <input type="email" name="username" id="username" autofocus autocomplete="off" placeholder="Enter your email">
+            <input type="password" name="password" id="password" autofocus autocomplete="off" placeholder="Must contain at least one number and one letter">
+            <input type="password" name="confirm_password" id="confirm_password" autofocus autocomplete="off" placeholder="Must match with the password entered above">
+            <input type="submit" name="submit" id="submit" value="Register">
+        </div>
+    </form>
+
+    <p> {{ message }}</p>
+{% endblock %}

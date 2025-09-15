@@ -1,0 +1,118 @@
+body {
+    color: antiquewhite;
+    background-color: black;
+    padding: 10px;
+    text-align: center;
+    font-size: large;
+}
+
+header {
+    margin: 10px;
+    padding: 10px;
+}
+
+main {
+    margin: 10px;
+    padding: 10px;
+}
+
+footer {
+    margin: 10px;
+    padding: 10px;
+}
+
+.notes {
+    text-align: left;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    background-color: rgb(20, 20, 20);
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 10px;
+}
+
+h1 {
+    margin-left: 10px;
+    padding-left: 10px;
+}
+
+.forms {
+    width: 50%;
+    margin: 0 auto;
+}
+
+form {
+    margin: 10px;
+    padding: 10px;
+}
+
+input {
+    margin: 10px;
+}
+
+#user_input {
+    width: 50%;
+    border: none;
+    border-radius: 10px;
+    padding: 10px
+}
+
+#username, #password, #confirm_password {
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    padding: 10px
+}
+
+#submit {
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#submit:hover {
+    background-color: antiquewhite;
+}
+
+table {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 50px;
+}
+
+th, td {
+    border: 1px;
+    border-style: none;
+    border-radius: 5px;
+}
+
+tr:nth-child(even) {
+    background-color: rgb(20, 20, 20);
+}
+
+tr:nth-child(odd) {
+    background-color: rgb(30, 30, 30);
+}
+
+.socials {
+    margin: 5px;
+    padding: 5px;
+    font-size:x-large;
+    transition: background-color 0.2s ease;
+}
+
+.socials:hover {
+    color: lightblue;
+}
+
+.copyright {
+    margin: 10px;
+    padding: 10px;
+}
