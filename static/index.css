@@ -37,37 +37,13 @@ footer {
     justify-content: space-between;
 }
 
-h1 {
-    margin-left: 5px;
-    padding-left: 5px;
-}
-
-.forms {
-    width: 50%;
-    margin: 0 auto;
-}
-
 form {
     margin: 10px;
-    padding: 10px;
+    padding: 5px;
 }
 
 input {
     margin: 10px;
-}
-
-#user_input {
-    width: 50%;
-    border: none;
-    border-radius: 10px;
-    padding: 10px
-}
-
-#username, #password, #confirm_password {
-    width: 100%;
-    border: none;
-    border-radius: 10px;
-    padding: 10px
 }
 
 #submit {

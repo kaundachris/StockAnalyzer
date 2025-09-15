@@ -36,8 +36,12 @@
     <i>Company should be traded in the US stock market</i>
 
     <form action="/" method="post">
-        <input type="text" name="user_input" id="user_input" autofocus autocomplete="off" placeholder="Example: TSLA if you want info on Tesla">
-        <input type="submit" name="submit" id="submit" value="Get Data">
+        <div>
+            <input type="text" name="user_input" id="user_input" autofocus autocomplete="off" placeholder="Example: TSLA if you want info on Tesla">
+        </div>
+        <div>
+            <input type="submit" name="submit" id="submit" value="Get Data">
+        </div>
     </form>
 
     <p> {{ message }}</p>
