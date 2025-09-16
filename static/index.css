@@ -63,6 +63,8 @@ input[name="sort"] {
     border: none;
     color:antiquewhite;
     background-color:rgb(30, 30, 30);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
 input[type="submit"]:hover {
