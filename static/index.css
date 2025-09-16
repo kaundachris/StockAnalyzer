@@ -67,11 +67,11 @@ input[name="sort"] {
     transition: background-color 0.2s ease;
 }
 
-input[type="submit"]:hover {
+input[name="submit"]:hover {
     background-color: antiquewhite;
 }
 
-input[type="sort"]:hover {
+input[name="sort"]:hover {
     background-color: rgb(20, 20, 20);
 }
 
