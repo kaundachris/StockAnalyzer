@@ -67,20 +67,38 @@ def initialize_db():
 
 
 # get all the search data to populate the history page
-def searches():
+def searches(sort_by=None, order="ASC"):
     # ensure user is logged in
     if "user_id" not in session:
         return []
+    
+    # whitelist of sortable columns (prevents SQL injection)
+    valid_columns = [
+        "forward_pe", "earnings_growth", "profit_margins",
+        "price_book", "quick_ratio", "current_ratio", "free_cashflow"
+    ]
+    valid_orders = ["ASC", "DESC"]
+
+    if sort_by not in valid_columns:
+        sort_by = None
+    if order not in valid_orders:
+        order = "ASC"
+
+
     with get_db() as connection:
         with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as db:
             # get searches related to the user id
-            db.execute("SELECT * FROM searches WHERE user_id = %s", (session["user_id"],))
+            if sort_by:
+                query = f"SELECT * FROM searches WHERE user_id = %s ORDER BY {sort_by} {order}"
+                db.execute(query, (session["user_id"],))
+            else:
+                db.execute("SELECT * FROM searches WHERE user_id = %s", (session["user_id"],))
             searches = db.fetchall()
             return searches
 
+
+
 # to determine which link to show in the navigation
-
-
 def status():
     if "user_id" in session:
         logged_in = True
@@ -300,6 +318,20 @@ def update():
 
     # render the page with the new entry
     return render_template("history.html", history=searches(), message="Data updated!")
+
+@app.route("/sort", methods=["POST"])
+def sort():
+    # check that the user is logged in
+    if "user_id" not in session:
+        return render_template("login.html", message="Log in to sort your searches")
+
+    # get the id of the stock to update
+    sort_by = request.form.get("sort")
+    if not sort_by:
+        return render_template("history.html", message="Sort failed. Please try again", logged_in=status())
+
+    # render the page with the new entry
+    return render_template("history.html", history=searches(sort_by=sort_by, order="ASC"), message="Data updated!")
 
 
 @app.route("/logout", methods=["GET", "POST"])

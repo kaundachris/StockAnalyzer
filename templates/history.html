@@ -32,13 +32,62 @@
             <thead>
                 <tr>
                     <td><strong>Company</strong></td>
-                    <td><strong>Price Earnings</strong></td>
-                    <td><strong>Earnings Growth</strong></td>
-                    <td><strong>Profit Margin</strong></td>
-                    <td><strong>PB Value</strong></td>
-                    <td><strong>Quick Ratio</strong></td>
-                    <td><strong>Current Ratio</strong></td>
-                    <td><strong>Free Cashflow</strong></td>
+                    <td>
+                        <strong>
+                            <form action="/sort" method="post">
+                                <input name="sort" id="sort" hidden value="forward_pe">
+                                <input type="submit" name="sort" id="sort" value="Price Earnings">
+                            </form>
+                        </strong>
+                    </td>
+                    <td>
+                        <strong>
+                            <form action="/sort" method="post">
+                                <input name="sort" id="sort" hidden value="earnings_growth">
+                                <input type="submit" name="sort" id="sort" value="Earnings Growth">
+                            </form>
+                        </strong>
+                    </td>
+                    <td>
+                        <strong>
+                            <form action="/sort" method="post">
+                                <input name="sort" id="sort" hidden value="profit_margins">
+                                <input type="submit" name="sort" id="sort" value="Profit Margin">
+                            </form>
+                        </strong>
+                    </td>
+                    <td>
+                        <strong>
+                            <form action="/sort" method="post">
+                                <input name="sort" id="sort" hidden value="price_book">
+                                <input type="submit" name="sort" id="sort" value="PB Value">
+                            </form>
+                        </strong>
+                    </td>
+                    <td>
+                        <strong>
+                            <form action="/sort" method="post">
+                                <input name="sort" id="sort" hidden value="quick_ratio">
+                                <input type="submit" name="sort" id="sort" value="Quick Ratio">
+                            </form>
+                        </strong>
+                    </td>
+                    <td>
+                        <strong>
+                            <form action="/sort" method="post">
+                                <input name="sort" id="sort" hidden value="current_ratio">
+                                <input type="submit" name="sort" id="sort" value="Current Ratio">
+                            </form>
+                        </strong>
+                    </td>
+                    <td>
+                        <strong>
+                            <form action="/sort" method="post">
+                                <input name="sort" id="sort" hidden value="company.free_cashflow">
+                                <input type="submit" name="sort" id="sort" value="Free Cashflow">
+                            </form>
+                        </strong>
+                    </td>
                     <td><strong>Update Data</strong></td>
                 </tr>
             </thead>
