@@ -57,7 +57,3 @@ class Stock():
     # get the company's free cashflow 
     def company_free_cashflow(self):
         return round(self.stock_data.info["freeCashflow"], 2)
-    
-
-gfdaa = Stock("gfdaa")
-print(gfdaa.company_free_cashflow())
