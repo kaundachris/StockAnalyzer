@@ -7,7 +7,7 @@ class Stock():
         self.ticker = ticker
         self._stock_data = None
 
-    #set the property so that the data is calle and stored into cache - reduces the calls to the API
+    #set the property so that the data is called and stored into cache - reduces the calls to the API
     @property
     def stock_data(self):
         if self._stock_data is None:
@@ -58,3 +58,6 @@ class Stock():
     def company_free_cashflow(self):
         return round(self.stock_data.info["freeCashflow"], 2)
     
+
+gfdaa = Stock("gfdaa")
+print(gfdaa.company_free_cashflow())

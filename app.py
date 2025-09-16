@@ -186,7 +186,7 @@ def login():
             db.execute("SELECT * FROM users WHERE username = %s", (username,))
             user = db.fetchone()
             if not user:
-                return render_template("login.html", message="You are not registered. Click on the register button above to register!")
+                return render_template("login.html", message="Invalid username/You are not registered!")
 
             # check that the password matches
             if not bcrypt.checkpw(password.encode("utf-8"), user["password_hash"].encode("utf-8")):
