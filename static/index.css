@@ -44,6 +44,7 @@ footer {
 
 input[type="text"], input[type="password"] {
     margin: 10px;
+    width: 500px;
     border: none;
     border-radius: 10px;
     padding: 10px
@@ -51,7 +52,6 @@ input[type="text"], input[type="password"] {
 
 input[type="submit"] {
     margin: 10px;
-    width: 250px;
     border: none;
     border-radius: 10px;
     padding: 10px;
