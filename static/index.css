@@ -61,11 +61,16 @@ input[name="submit"] {
 
 input[name="sort"] {
     border: none;
-    background-color: black;
+    color:antiquewhite;
+    background-color:rgb(30, 30, 30);
 }
 
 input[type="submit"]:hover {
     background-color: antiquewhite;
+}
+
+input[type="sort"]:hover {
+    background-color: rgb(20, 20, 20);
 }
 
 table {
