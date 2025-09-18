@@ -61,7 +61,7 @@
         <p>👉👉It has a Current Ratio of <strong>{{ stock_data.current_ratio }}</strong></p>
         <i><strong>NB: </strong>A current ratio of above 1 indicates the ability of the company to pay out it's short term debts without having to sell any long term assets</i>
         <br><br>
-        <p>👉👉It has a Free Cashflow of <strong>{{ stock_data.free_cashflow }}</strong></p>
+        <p>👉👉It has a Free Cashflow of <strong>{{ stock_data.free_cashflow | currency }}</strong></p>
         <i><strong>NB: </strong>This is the money left over after the company pays its:
             <ol>
                 <li>Operating expenses — such as mortgage or rent, payroll, property taxes and inventory costs, and</li>
