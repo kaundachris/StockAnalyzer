@@ -5,7 +5,7 @@
 ## Project Overview
 Stock Analyzer is a web application that helps users analyze stock fundamentals for companies listed on US stock exchanges. It provides key financial metrics and ratios to assist in investment decision-making, and provides a description of the importance of each financial metric and ratio. This allows the user with little to no understanding of fundamental analysis to know why each metric matters.
 
-It allows for the results to be dynamically inserted into the results of each search, allowing for relevant results nad explanations 
+It allows for the financial metrics to be dynamically inserted into the results of each search, allowing for relevant explanations for each metric.
 
 ### Key Features
 - Real-time stock data retrieval.
@@ -178,3 +178,4 @@ Common issues and solutions:
 - Export functionality
 - Mobile responsive design
 - Dark/Light theme toggle
+
