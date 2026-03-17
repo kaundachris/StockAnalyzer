@@ -6,6 +6,8 @@ import bcrypt
 import os
 
 # check that the password is at least 6 characters long, contains at least one char, and one number
+
+
 def check_password(password):
     has_digit = False
     has_letter = False
@@ -108,8 +110,8 @@ def status():
 # retreive stock data and store in a usable format
 def retrieve_stock_data(ticker: str):
     stock = Stock(ticker)
-
-    if stock.company_name() == "N/A":
+    
+    try:
         # store the data for rendering
         stock_data = {}
         stock_data["ticker"] = ticker
@@ -125,7 +127,7 @@ def retrieve_stock_data(ticker: str):
         stock_data["current_ratio"] = stock.company_current_ratio()
         stock_data["free_cashflow"] = stock.company_free_cashflow()
         return stock_data
-    else:
+    except Exception:
         return None
 
 
