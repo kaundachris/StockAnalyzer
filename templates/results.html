@@ -1,130 +1,132 @@
 {% extends "base.html" %}
 
 {% block header %}
-    <div class="top">    
-        <h1>Golconda</h1>
-        
-        <div class="nav">
-            {% if logged_in %}
-                <form action="/logout" method="post">
-                    <input name="login" id="login" hidden>
-                    <input type="submit" name="submit" id="submit" value="Log Out">
-                </form>
+<div class="top">
+    <h1>Golconda</h1>
 
-                <form action="/" method="post">
-                    <input name="search" id="search" hidden>
-                    <input type="submit" name="submit" id="submit" value="Search">
-                </form>
-        
-            {% else %}
-                <form action="/login" method="post">
-                    <input name="login" id="login" hidden>
-                    <input type="submit" name="submit" id="submit" value="Log In">
-                </form>
+    <div class="nav">
+        {% if logged_in %}
+        <form action="/logout" method="post">
+            <input name="login" id="login" hidden>
+            <input type="submit" name="submit" id="submit" value="Log Out">
+        </form>
 
-                <form action="/register" method="post">
-                    <input name="register" id="register" hidden>
-                    <input type="submit" name="submit" id="submit" value="Register">
-                </form>
-            {% endif %}
-        </div>
+        <form action="/" method="post">
+            <input name="search" id="search" hidden>
+            <input type="submit" name="submit" id="submit" value="Search">
+        </form>
+
+        {% else %}
+        <form action="/login" method="post">
+            <input name="login" id="login" hidden>
+            <input type="submit" name="submit" id="submit" value="Log In">
+        </form>
+
+        <form action="/register" method="post">
+            <input name="register" id="register" hidden>
+            <input type="submit" name="submit" id="submit" value="Register">
+        </form>
+        {% endif %}
     </div>
+</div>
 {% endblock %}
 
 {% block main %}
-    <h1>Company: {{ stock_data.long_name }}</h1>
-    <div class="notes"></div>
-        <table>
-            <thead>
-                <tr>
-                    <th><strong>Item</strong></th>
-                    <th><strong>Detail</strong></th>
-                    <th><strong>Notes</strong></th>
-                </tr>
-            </thead>
+<h1>Company: {{ stock_data.long_name }}</h1>
+<div class="notes"></div>
+    <table>
+        <thead>
+            <tr>
+                <th><strong>Item</strong></th>
+                <th><strong>Detail</strong></th>
+                <th><strong>Notes</strong></th>
+            </tr>
+        </thead>
 
-            <tbody>
-                <tr>
-                    <td>Industry</td>
-                    <td>{{ stock_data.industry }}</td>
-                    <td></td>
-                </tr>
+        <tbody>
+            <tr>
+                <td>Industry</td>
+                <td>{{ stock_data.industry }}</td>
+                <td>This company operates in the {{ stock_data.industry }} industry</td>
+            </tr>
 
-                <tr>
-                    <td>Market Capitalization</td>
-                    <td>{{ stock_data.market_cap | currency }}</td>
-                    <td>Not necessarily an important number, but good to know. Compare this number to other companies in the
-                        industry to determine if this is good or bad.</td>
-                </tr>
+            <tr>
+                <td>Market Capitalization</td>
+                <td>{{ stock_data.market_cap | currency }}</td>
+                <td>Not necessarily an important number, but good to know. Compare this number to other companies in the
+                    industry to determine if this is good or bad.</td>
+            </tr>
 
-                <tr>
-                    <td>Price to Earnings ratio</td>
-                    <td>{{ stock_data.forward_pe }}</td>
-                    <td>This means that it will take the company {{ stock_data.forward_pe }} years to earn you the equivalent of
-                        the price paid for your shares. If this number is negative, the company is actually making losses!</td>
-                </tr>
+            <tr>
+                <td>Price to Earnings ratio</td>
+                <td>{{ stock_data.forward_pe }}</td>
+                <td>This means that it will take the company {{ stock_data.forward_pe }} years to earn you the equivalent of
+                    the price paid for your shares. If this number is negative, the company is actually making losses!</td>
+            </tr>
 
-                <tr>
-                    <td>Earnings Growth</td>
-                    <td>{{ stock_data.earnings_growth }}%</td>
-                    <td>Compare this number to other companies in the industry to determine if this is good or bad.</td>
-                </tr>
+            <tr>
+                <td>Earnings Growth</td>
+                <td>{{ stock_data.earnings_growth }}%</td>
+                <td>Compare this number to other companies in the industry to determine if this is good or bad.</td>
+            </tr>
 
-                <tr>
-                    <td>Profit Margin</td>
-                    <td>{{ stock_data.profit_margins }}%</td>
-                    <td>This means that for every $100 the company makes, it keeps {{ stock_data.profit_margins | currency }}.
-                    </td>
-                </tr>
+            <tr>
+                <td>Profit Margin</td>
+                <td>{{ stock_data.profit_margins }}%</td>
+                <td>This means that for every $100 the company makes, it keeps {{ stock_data.profit_margins | currency }}.
+                </td>
+            </tr>
 
-                <tr>
-                    <td>Book Value</td>
-                    <td>{{ stock_data.book_value }}</td>
-                    <td>Important in comparison to the market capitalization, but you this is covered in the next note!</td>
-                </tr>
+            <tr>
+                <td>Book Value</td>
+                <td>{{ stock_data.book_value }}</td>
+                <td>Important in comparison to the market capitalization, but you this is covered in the next note!</td>
+            </tr>
 
-                <tr>
-                    <td>Price to Book Ratio</td>
-                    <td>{{ stock_data.price_book }}</td>
-                    <td>This means that for every $100 dollars you pay for the company's stock, you get {{ (100 /
-                        stock_data.price_book | float) | currency }} in actual backed assets</td>
-                </tr>
+            <tr>
+                <td>Price to Book Ratio</td>
+                <td>{{ stock_data.price_book }}</td>
+                <td>This means that for every $100 dollars you pay for the company's stock, you get {{ (100 /
+                    (stock_data.price_book | float)) | currency }} in actual backed assets</td>
+            </tr>
 
-                <tr>
-                    <td>Quick Ratio</td>
-                    <td>{{ stock_data.quick_ratio }}</td>
-                    <td>A quick ratio of above 1 indicates the ability of the company to pay out it's short term debts without
-                        having to sell any short term assets.</td>
-                </tr>
+            <tr>
+                <td>Quick Ratio</td>
+                <td>{{ stock_data.quick_ratio }}</td>
+                <td>A quick ratio of above 1 indicates the ability of the company to pay out it's short term debts without
+                    having to sell any short term assets.</td>
+            </tr>
 
-                <tr>
-                    <td>Current Ratio</td>
-                    <td>{{ stock_data.current_ratio }}</td>
-                    <td>A current ratio of above 1 indicates the ability of the company to pay out it's short term debts without
-                        having to sell any long term assets.</td>
-                </tr>
+            <tr>
+                <td>Current Ratio</td>
+                <td>{{ stock_data.current_ratio }}</td>
+                <td>A current ratio of above 1 indicates the ability of the company to pay out it's short term debts without
+                    having to sell any long term assets.</td>
+            </tr>
 
-                <tr>
-                    <td>Free Cashflow</td>
-                    <td>{{ stock_data.free_cashflow | currency }}</td>
-                    <td>This is the money left over after the company pays its:
-                        <ol>
-                            <li>Operating expenses — such as mortgage or rent, payroll, property taxes and inventory costs, and
-                            </li>
-                            <li>Capital expenditures (CapEx). Examples of CapEx are long-term investments such as equipment,
-                                technology and real estate.</li>
-                        </ol>
-                        <i>Free cash flow can be used to invest in growing the business, paying down debt or paying dividends to
+            <tr>
+                <td>Free Cashflow</td>
+                <td>{{ stock_data.free_cashflow | currency }}</td>
+                <td>This is the money left over after the company pays its:
+                    <ol>
+                        <li>Operating expenses — such as mortgage or rent, payroll, property taxes and inventory costs, and
+                        </li>
+                        <li>Capital expenditures (CapEx). Examples of CapEx are long-term investments such as equipment,
+                            technology and real estate.</li>
+                    </ol>
+                    <i>Free cash flow can be used to invest in growing the business, paying down debt or paying dividends to
                         owners and shareholders.</i>
-                        <i>If negative, the company has no money left over to return to stockholders</i>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                    <br>
+                    <br>
+                    <i>If negative, the company has no money left over to return to stockholders</i>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
-    <form action="/history" method="post">
-        <input type="text" name="history" id="history" hidden>
-        <input type="submit" name="submit" id="submit" value="Add to Portfolio">
-    </form>
+<form action="/history" method="post">
+    <input type="text" name="history" id="history" hidden>
+    <input type="submit" name="submit" id="submit" value="Add to Portfolio">
+</form>
 {% endblock %}
