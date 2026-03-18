@@ -46,7 +46,7 @@
             <tbody>
                 <tr>
                     <td>Industry</td>
-                    <td>{{ company.industry }}</td>
+                    <td>{{ stock_data.industry }}</td>
                 </tr>
 
                 <tr>
@@ -71,7 +71,7 @@
 
                 <tr>
                     <td>Profit Margin</td>
-                    <td>{{ stock_data.profit_margins }}%</td>
+                    <td>{{ data.profit_margins }}%</td>
                     <td>This means that for every $100 the company makes, it keeps {{ stock_data.profit_margins | currency }}.
                     </td>
                 </tr>
@@ -118,7 +118,6 @@
                         <i>If negative, the company has no money left over to return to stockholders</i>
                     </td>
                 </tr>
-
             </tbody>
         </table>
     </div>
