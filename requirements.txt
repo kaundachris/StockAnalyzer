@@ -4,9 +4,11 @@ cffi==2.0.0
 charset-normalizer==3.4.3
 curl_cffi==0.13.0
 frozendict==2.4.6
+gunicorn==25.1.0
 idna==3.10
 multitasking==0.0.12
 numpy==2.3.3
+packaging==26.0
 pandas==2.3.2
 peewee==3.18.2
 platformdirs==4.4.0
