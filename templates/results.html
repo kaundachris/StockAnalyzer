@@ -37,9 +37,9 @@
         <table>
             <thead>
                 <tr>
-                    <td><strong>Item</strong></td>
-                    <td><strong>Detail</strong></td>
-                    <td><strong>Notes</strong></td>
+                    <th><strong>Item</strong></th>
+                    <th><strong>Detail</strong></th>
+                    <th><strong>Notes</strong></th>
                 </tr>
             </thead>
 
@@ -47,6 +47,7 @@
                 <tr>
                     <td>Industry</td>
                     <td>{{ stock_data.industry }}</td>
+                    <td></td>
                 </tr>
 
                 <tr>
@@ -86,7 +87,7 @@
                     <td>Price to Book Ratio</td>
                     <td>{{ stock_data.price_book }}</td>
                     <td>This means that for every $100 dollars you pay for the company's stock, you get {{ (100 /
-                        stock_data.price_book|float) | currency }} in actual backed assets</td>
+                        stock_data.price_book | float) | currency }} in actual backed assets</td>
                 </tr>
 
                 <tr>
@@ -113,7 +114,7 @@
                             <li>Capital expenditures (CapEx). Examples of CapEx are long-term investments such as equipment,
                                 technology and real estate.</li>
                         </ol>
-                        Free cash flow can be used to invest in growing the business, paying down debt or paying dividends to
+                        <i>Free cash flow can be used to invest in growing the business, paying down debt or paying dividends to
                         owners and shareholders.</i>
                         <i>If negative, the company has no money left over to return to stockholders</i>
                     </td>
