@@ -89,7 +89,7 @@ def searches(sort_by=None, order="ASC"):
         with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as db:
             # get searches related to the user id
             if sort_by:
-                query = f"SELECT * FROM searches WHERE user_id = %s ORDER BY {sort_by} {order}"
+                query = f"SELECT * FROM searches WHERE user_id = %s ORDER BY {sort_by} {order} NULLS LAST"
                 db.execute(query, (session["user_id"],))
             else:
                 db.execute("SELECT * FROM searches WHERE user_id = %s", (session["user_id"],))
@@ -136,8 +136,8 @@ def store_data(data: dict):
     # store this in the database
     with get_db() as connection:
         with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as db:
-            db.execute("DELETE FROM searches WHERE ticker = %s AND user_id = %s",
-                    (data["ticker"], session["user_id"]))
+            db.execute("DELETE FROM searches WHERE long_name = %s AND user_id = %s",
+                    (data["long_name"], session["user_id"]))
             db.execute('''INSERT INTO searches (user_id, ticker, long_name, industry, forward_pe, earnings_growth, profit_margins, market_cap, book_value, price_book, quick_ratio, current_ratio, free_cashflow)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)''',
                     (session["user_id"], data["ticker"], data["long_name"], data["industry"], data["forward_pe"], data["earnings_growth"], data["profit_margins"], data["market_cap"],
