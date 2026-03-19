@@ -60,8 +60,8 @@
                 <tr>
                     <td>Price to Earnings ratio</td>
                     <td>{{ stock_data.forward_pe }}</td>
-                    <td style="text-align: left; padding: 10px;">This means that it will take the company {{ stock_data.forward_pe }} years to earn you the equivalent of
-                        the price paid for your shares. If this number is negative, the company is actually making losses!</td>
+                    <td style="text-align: left; padding: 10px;">It will take the company {{ stock_data.forward_pe }} years to earn (per share) the equivalent of
+                        the price paid for your shares. <br> If this number is negative, the company is actually making losses!</td>
                 </tr>
 
                 <tr>
@@ -73,34 +73,34 @@
                 <tr>
                     <td>Profit Margin</td>
                     <td>{{ stock_data.profit_margins }}%</td>
-                    <td style="text-align: left; padding: 10px;">This means that for every $100 the company makes, it keeps {{ stock_data.profit_margins | currency }}.
+                    <td style="text-align: left; padding: 10px;">This means that for every $100 the company makes, it keeps {{ stock_data.profit_margins | currency }}. The rest is eaten up by expenses.
                     </td>
                 </tr>
 
                 <tr>
                     <td>Book Value</td>
                     <td>{{ stock_data.book_value }}</td>
-                    <td style="text-align: left; padding: 10px;">Important in comparison to the market capitalization, but you this is covered in the next note!</td>
+                    <td style="text-align: left; padding: 10px;">Important in comparison to the market capitalization. Read next note for more context!</td>
                 </tr>
 
                 <tr>
                     <td>Price to Book Ratio</td>
                     <td>{{ stock_data.price_book }}</td>
-                    <td style="text-align: left; padding: 10px;">This means that for every $100 dollars you pay for the company's stock, you get {{ (100 /
-                        (stock_data.price_book | float)) | currency }} in actual backed assets</td>
+                    <td style="text-align: left; padding: 10px;">For every $100 dollars you pay for the company's stock, you get actual backed assets worth {{ (100 /
+                        (stock_data.price_book | float)) | currency }}</td>
                 </tr>
 
                 <tr>
                     <td>Quick Ratio</td>
                     <td>{{ stock_data.quick_ratio }}</td>
-                    <td style="text-align: left; padding: 10px;">A quick ratio of above 1 indicates the ability of the company to pay out it's short term debts without
-                        having to sell any short term assets.</td>
+                    <td style="text-align: left; padding: 10px;">If above 1, the company can pay out it's short term debts without
+                        having to sell any short term assets - a good thing. </td>
                 </tr>
 
                 <tr>
                     <td>Current Ratio</td>
                     <td>{{ stock_data.current_ratio }}</td>
-                    <td style="text-align: left; padding: 10px;">A current ratio of above 1 indicates the ability of the company to pay out it's short term debts without
+                    <td style="text-align: left; padding: 10px;">If above 1, the company can pay out it's short term debts without
                         having to sell any long term assets.</td>
                 </tr>
 
@@ -111,13 +111,14 @@
                         <ol>
                             <li>Operating expenses — such as mortgage or rent, payroll, property taxes and inventory costs, and
                             </li>
-                            <li>Capital expenditures (CapEx). Examples of CapEx are long-term investments such as equipment,
+                            <li>Capital expenditures (CapEx) - such as equipment,
                                 technology and real estate.</li>
                         </ol>
-                        <i>Free cash flow can be used to invest in growing the business, paying down debt or paying dividends to
-                            owners and shareholders.</i>
                         <br>
-                        <i>If negative, the company has no money left over to return to stockholders</i>
+                        Free cash flow can be used to invest in growing the business, paying down debt or paying dividends to
+                            owners and shareholders.
+                        <br>
+                        If negative, the company has no money left over to return to stockholders
                     </td>
                 </tr>
             </tbody>
