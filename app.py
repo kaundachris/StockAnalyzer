@@ -176,8 +176,6 @@ def index():
     # store the search data
     session["last_ticker"] = stock_data["ticker"]
 
-    # to determine which link to show in the navigation
-
     return render_template("results.html", stock_data=stock_data, logged_in=status())
 
 
@@ -212,6 +210,16 @@ def login():
 
             # Set user_id in session after successful login
             session["user_id"] = user["id"]
+
+            # Store the user's search - if available - in their database
+            stock = session.get("last_ticker")
+            if stock:
+                # retrieve its data
+                stock_data = retrieve_stock_data(stock)
+            
+                # store this in the database
+                if stock_data:
+                    store_data(stock_data)
             return redirect("/history")
 
 
