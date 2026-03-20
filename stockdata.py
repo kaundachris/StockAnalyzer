@@ -15,13 +15,13 @@ class Stock():
             return self._info
 
         # checks for data
-        #first, call the API for data
+        # first, call the API for data
         stock = Ticker(self.ticker)
 
-        #store data, if any
+        # store data, if any
         data = stock.history(period="1d")
         
-        #if no data, raise ValueError. 
+        # if no data, raise ValueError. 
         if data.empty:
             raise ValueError(f"Data for {self.ticker} could not be found")
         

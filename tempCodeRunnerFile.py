@@ -1,5 +1,5 @@
-# from dotenv import load_dotenv
-# load_dotenv()
+from dotenv import load_dotenv
+load_dotenv()
 
 from flask import Flask, render_template, request, redirect, session
 from stockdata import Stock
@@ -162,7 +162,7 @@ def store_data(data: dict):
 
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY")
+app.secret_key = os.environ.get("SECRET_KEY", "dev")
 initialize_db()
 
 
@@ -220,20 +220,17 @@ def login():
         db.execute("SELECT * FROM users WHERE username = %s", (username,))
         user = db.fetchone()
         if not user:
-            return render_template("login.html", message="Invalid username or password!")
+            return render_template("login.html", message="Invalid username/You are not registered!")
 
         # check that the password matches
         if not bcrypt.checkpw(password.encode("utf-8"), user["password_hash"].encode("utf-8")):
-            return render_template("login.html", message="Invalid username or password!")
-
-        # store the last ticker
-        stock = session.get("last_ticker")
+            return render_template("login.html", message="Invalid password!")
 
         # Set user_id in session after successful login
-        session.clear()
         session["user_id"] = user["id"]
 
         # Store the user's search - if available - in their database
+        stock = session.get("last_ticker")
         if stock:
             # retrieve its data
             stock_data = retrieve_stock_data(stock)
@@ -392,6 +389,4 @@ def logout():
 
 
 if __name__ == "__main__":
-    # app.run(debug=True)
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(debug=True)

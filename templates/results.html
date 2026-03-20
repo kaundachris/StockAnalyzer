@@ -86,8 +86,13 @@
                 <tr>
                     <td>Price to Book Ratio</td>
                     <td>{{ stock_data.price_book }}</td>
-                    <td style="text-align: left; padding: 10px;">For every $100 dollars you pay for the company's stock, you get actual backed assets worth {{ (100 /
-                        (stock_data.price_book | float)) | currency }}</td>
+                    <td style="text-align: left; padding: 10px;">For every $100 dollars you pay for the company's stock, you get actual backed assets worth 
+                        {% if stock_data.price_book != 0 %}
+                            {{ (100 / (stock_data.price_book | float)) | currency }}
+                        {% else %}
+                            {{ 0 | currency }}
+                        {% endif %}
+                    </td>
                 </tr>
 
                 <tr>
