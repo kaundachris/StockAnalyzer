@@ -88,8 +88,7 @@
                             </form>
                         </strong>
                     </td>
-                    <td><strong>Update Data</strong></td>
-                    <td><strong>Delete Data</strong></td>
+                    <td><strong>Update/Delete</strong></td>
                 </tr>
             </thead>
 
@@ -104,17 +103,22 @@
                         <td>{{ company.quick_ratio }}</td>
                         <td>{{ company.current_ratio }}</td>
                         <td>{{ company.free_cashflow | currency }}</td>
-                        <td>
-                            <form action="/update" method="post">
-                                <input name="update" id="update" hidden value="{{ company.ticker }}">
-                                <input type="submit" name="submit" id="submit" value="Update">
-                            </form>
-                        </td>
-                        <td>
-                            <form action="/delete" method="post">
-                                <input name="delete" id="delete" hidden value="{{ company.ticker }}">
-                                <input type="submit" name="submit" id="submit" value="Delete">
-                            </form>
+                        <td style="padding: 5px;">
+                            <div style="display:flex; align-items:center; gap:8px; margin: 5px; padding: 5px;">
+                                <form action="/update" method="post">
+                                    <input name="update" id="update" hidden value="{{ company.ticker }}">
+                                    <button type="submit" name="submit" id="submit">
+                                        <i class="material-icons">refresh</i>
+                                    </button>
+                                </form>
+
+                                <form action="/delete" method="post">
+                                    <input name="delete" id="delete" hidden value="{{ company.ticker }}">
+                                    <button type="submit" name="submit" id="submit">
+                                        <i class="material-icons">delete</i>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 {% endfor %}

@@ -75,6 +75,18 @@ input[name="sort"]:hover {
     background-color: rgb(20, 20, 20);
 }
 
+button[name="submit"] {
+    border: none;
+    color:antiquewhite;
+    background-color:rgb(30, 30, 30);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+button[name="submit"]:hover {
+    background-color: rgb(20, 20, 20);
+}
+
 table {
     width: 100%;
     margin-top: 10px;
