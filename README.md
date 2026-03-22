@@ -1,180 +1,186 @@
 # Stock Analyzer
 
-#### Video Demo:  <https://youtu.be/okp5wamPM60>
+A Flask web application for fundamental analysis of stocks listed on US exchanges. Users can search for any company by name or ticker, view key financial metrics, and — if registered — save and track searches over time.
 
-## Project Overview
-Stock Analyzer is a web application that helps users analyze stock fundamentals for companies listed on US stock exchanges. It provides key financial metrics and ratios to assist in investment decision-making, and provides a description of the importance of each financial metric and ratio. This allows the user with little to no understanding of fundamental analysis to know why each metric matters.
+**Live Demo:** https://youtu.be/okp5wamPM60
 
-It allows for the results to be dynamically inserted into the results of each search, allowing for relevant results nad explanations 
+---
 
-### Key Features
-- Real-time stock data retrieval.
-- Dynamic explanations to the stock's fundamental metrics.
-- User authentication system.
-- Historical search tracking, with allowance for updates to previous searches to check for new data.
-- Fundamental analysis metrics including:
-  - Forward P/E Ratio,
-  - Earnings Growth,
-  - Profit Margins,
-  - Price-to-Book Ratio,
-  - Quick Ratios,
-  - Current Ratios,
-  - Free Cash Flow.
+## Features
 
-## Technologies Used
+- Search by company name or ticker symbol
+- Real-time financial data via Yahoo Finance
+- Dynamic explanations of each financial metric
+- User authentication (register, login, logout)
+- Search history with update and delete functionality
+- Sortable history table by any financial metric
+- Searches available to guests — no account required to explore
 
-### Languages
-- Python 3.13.7
-- HTML/CSS
-- JavaScript
+---
 
-### Main Libraries
-- Flask - Web framework
-- yfinance - Yahoo Finance API wrapper
-- SQLite3 - Database management
-- bcrypt - Password hashing
-- Jinja2 - Template engine
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Backend | Python 3, Flask |
+| Database | PostgreSQL (via psycopg2) |
+| Frontend | HTML, CSS, JavaScript, Jinja2 |
+| Data | yfinance (Yahoo Finance) |
+| Auth | bcrypt |
+| Deployment | Render (gunicorn) |
+
+---
 
 ## Project Structure
+```
+stock-analyzer/
+│
+├── app.py                  # Flask routes and core application logic
+├── stockdata.py            # Stock data retrieval and processing
+├── company_check.py        # Company name to ticker resolution
+├── requirements.txt        # Python dependencies
+├── render.yaml             # Render deployment configuration
+├── .env                    # Environment variables (not committed)
+├── .gitignore
+│
+├── templates/
+│   ├── base.html           # Shared layout
+│   ├── index.html          # Search page
+│   ├── results.html        # Stock analysis results
+│   ├── history.html        # Saved search history
+│   ├── login.html          # Login page
+│   └── register.html       # Registration page
+│
+└── static/
+    ├── index.css           # Stylesheet
+    └── index.js            # Dynamic footer year
+```
 
-### Core Files
-- `app.py` - Main application file containing Flask routes and core logic of the website.
-- `stockdata.py` - Used to retrieve the stock data in a concise format. Stock data is retrived using the yfinance module.
-- `requirements.txt` - Contains a list of all the project dependencies.
+---
 
-### Templates
-- `base.html` - Base template that other templates extend from.
-- `index.html` - Homepage which allows a user - loggen in or not - to serach for a stock of choice. This was a concious choice as I think people might be averse to signing up for something they only use once in a while. This way, a person can search for a stock quickly, without going through the hassle of logging in.
-- `login.html` - User login page - allows the user to save their searches and view the history of their searches. 
-- `register.html` - New user registration page.
-- `history.html` - Displays user's previous stock queries - conditional on the user being logged in.
-- `results.html` - Shows detailed stock analysis results.
+## Database Schema
 
-### Static Files
-- `static/index.css` - Main stylesheet for the application.
-- `static/index.js` - Client-side JavaScript functionality - I use this to get the year dynamically.
+### `users`
+| Column | Type | Notes |
+|---|---|---|
+| id | SERIAL | Primary key |
+| username | TEXT | Unique, not null |
+| password_hash | TEXT | bcrypt hash |
 
-### Database
-- `instance/stockanalyzer.db` - SQLite database file (auto-generated)
+### `searches`
+| Column | Type | Notes |
+|---|---|---|
+| id | SERIAL | Primary key |
+| user_id | INTEGER | Foreign key → users.id |
+| ticker | TEXT | Stock ticker symbol |
+| long_name | TEXT | Company full name |
+| industry | TEXT | Industry classification |
+| forward_pe | REAL | Forward Price/Earnings ratio |
+| earnings_growth | REAL | Year-over-year earnings growth |
+| profit_margins | REAL | Net profit margin |
+| market_cap | REAL | Market capitalisation |
+| book_value | REAL | Book value per share |
+| price_book | REAL | Price-to-Book ratio |
+| quick_ratio | REAL | Quick ratio |
+| current_ratio | REAL | Current ratio |
+| free_cashflow | REAL | Free cash flow |
 
-## File Descriptions
-
-#### Backend
-- `app.py`: Contains all Flask routes, database interactions, and core application logic including user authentication and storage of the user's stock data searches in their database.
-- `stockdata.py`: Handles all interactions with the yfinance API, processes raw stock data, and calculates financial metrics.
-
-#### Frontend
-- `base.html`: Contains the basic HTML structure, navigation, and footer shared across all pages.
-- `index.html`: Main search interface where users can input stock tickers.
-- `login.html`: User authentication interface.
-- `register.html`: New user registration interface.
-- `history.html`: Displays a table of previous stock searches with update functionality.
-- `results.html`: Detailed view of stock analysis with key metrics and explanations.
-
-#### Static Assets
-- `index.css`: Handles all styling including dark theme, responsive design, and table layouts.
-- `index.js`: Manages dynamic content updates particularly for the date functionality in the page's footer
-
-## Database Structure
-The application uses SQLite with two main tables:
-- users: Stores user authentication data
-- searches: Stores historical stock queries
-
-## Security Features
-- Password hashing using bcrypt
-- Session-based authentication
-- Input validation and sanitization
-
-## API Integration
-### yfinance API
-- Retrieves real-time stock data
-- Caches responses to minimize API calls
-- Handles rate limiting automatically
-- Error handling for invalid tickers
-
-## User Experience
-### Non-authenticated Users
-- Can search for stock information
-- View detailed analysis
-- Access to all fundamental metrics
-
-### Authenticated Users
-- All features available to non-authenticated users
-- Search history tracking
-- Ability to update previous searches
-- Data persistence across sessions
-
-## Error Handling
-- Invalid stock ticker validation
-- API failure graceful degradation
-- Database connection error recovery
-- User input sanitization
-
-## Performance Optimizations
-- Client-side caching
-- Minimal API calls through data caching
-- Efficient database queries
-- Compressed static assets
+---
 
 ## Setup & Installation
-1. Clone the repository
-2. Install required packages:
+
+### Prerequisites
+- Python 3.10+
+- PostgreSQL database
+- A `DATABASE_URL` connection string
+
+### Local Development
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/your-username/stock-analyzer.git
+cd stock-analyzer
+```
+
+2. **Create and activate a virtual environment**
+```bash
+python -m venv venv
+
+# macOS/Linux
+source venv/bin/activate
+
+# Windows
+.\venv\Scripts\activate
+```
+
+3. **Install dependencies**
 ```bash
 pip install -r requirements.txt
 ```
-3. Set up environment variables:
-```bash
-export SECRET_KEY="your_secret_key"
+
+4. **Set up environment variables**
+
+Create a `.env` file in the root directory:
 ```
-4. Run the application:
+DATABASE_URL=postgresql://username:password@localhost:5432/stockanalyzer
+SECRET_KEY=your-secret-key-here
+```
+
+To generate a secure secret key:
+```python
+import secrets
+print(secrets.token_hex(32))
+```
+
+5. **Run the application**
 ```bash
 python app.py
 ```
 
-## Testing
-```bash
-# Run unit tests
-python -m pytest tests/
+The app will be available at `http://localhost:5000`.
 
-# Run integration tests
-python -m pytest tests/integration/
-```
+---
 
-## Development
-### Local Development Setup
-```bash
-# Create virtual environment
-python -m venv venv
+## Deployment (Render)
 
-# Activate virtual environment (Windows)
-.\venv\Scripts\activate
+The app is configured for deployment on [Render](https://render.com) via `render.yaml`.
 
-# Install development dependencies
-pip install -r requirements-dev.txt
-```
+Set the following environment variables in your Render dashboard:
+- `DATABASE_URL` — your PostgreSQL connection string
+- `SECRET_KEY` — a securely generated random string
 
-### Database Migrations
-```bash
-# Initialize the database
-flask db init
+The database tables are created automatically on startup via `initialize_db()`.
 
-# Create new migration
-flask db migrate
+---
 
-# Apply migration
-flask db upgrade
-```
+## Financial Metrics Explained
 
-## Troubleshooting
-Common issues and solutions:
-1. API Rate Limiting
-2. Database Connection Issues
-3. Authentication Errors
-4. Data Caching Problems
+| Metric | What It Measures |
+|---|---|
+| Forward P/E | Expected earnings relative to price — lower may indicate better value |
+| Earnings Growth | Year-over-year growth in earnings per share |
+| Profit Margin | Percentage of revenue retained as profit |
+| Price-to-Book | Share price relative to book value — lower may indicate undervaluation |
+| Quick Ratio | Ability to cover short-term liabilities without selling inventory |
+| Current Ratio | Broader measure of short-term financial health |
+| Free Cash Flow | Cash remaining after capital expenditure |
 
-## Future Enhancements
-- Technical analysis integration
+---
+
+## Security
+
+- Passwords hashed with **bcrypt** before storage — plaintext is never stored
+- Parameterised queries throughout — protected against SQL injection
+- Column whitelisting for sort parameters — dynamic SQL is never built from raw user input
+- Session cleared on login — prevents session fixation attacks
+- Credentials stored in environment variables — never hardcoded
+
+---
+
+## Future Improvements
+
+- Ascending/descending sort toggle on history table
+- Technical analysis metrics (moving averages, RSI)
+- CSV export of search history
+- Mobile-responsive design
 - Real-time price updates
-- Export functionality
-- Mobile responsive design
-- Dark/Light theme toggle

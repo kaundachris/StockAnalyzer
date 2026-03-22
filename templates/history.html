@@ -89,6 +89,7 @@
                         </strong>
                     </td>
                     <td><strong>Update Data</strong></td>
+                    <td><strong>Delete Data</strong></td>
                 </tr>
             </thead>
 
@@ -107,6 +108,12 @@
                             <form action="/update" method="post">
                                 <input name="update" id="update" hidden value="{{ company.ticker }}">
                                 <input type="submit" name="submit" id="submit" value="Update">
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/delete" method="post">
+                                <input name="delete" id="delete" hidden value="{{ company.ticker }}">
+                                <input type="submit" name="submit" id="submit" value="Delete">
                             </form>
                         </td>
                     </tr>

@@ -1,8 +1,13 @@
 import requests
 
+"""
+    Checks the existence of a company
+    If company exists, it returns the ticker of the company
+    If it doesn't, it returns None
+"""
 class CompanyLookup():
     def __init__(self):
-        # this dictionary is a permernent item of the class
+        # Reduces the number of API calls by storing any searches made
         self.COMPANY_TICKERS = {
             "google": "GOOGL",
             "apple": "AAPL",
@@ -10,7 +15,6 @@ class CompanyLookup():
             "nvidia": "NVDA"
         }
 
-        # this is used repeatedly when making calls
         # browser identifier to prevent Yahoo from blocking the request
         self.headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -28,22 +32,21 @@ class CompanyLookup():
         if len(company_name) < 5:
             return company_name
 
-        # check that it is not in the list of companies already
-        # this reduces API calls
+        # if it is in the list of companies already, return the corresponding ticker
         if company_name in self.COMPANY_TICKERS:
             return self.COMPANY_TICKERS.get(company_name)
 
         # url for the search API for Yahoo Finance
-        # go to the search endpoint
+        # go to the "search" endpoint
         url = "https://query2.finance.yahoo.com/v1/finance/search"
 
         # pass the company who's data you want retrieved
         parameters = {
-            # what company details you want to pull 
+            # what company you are searching? 
             "q": company_name,
-            # without this, the call will return several quotes. This minimizes the quotes
+            # this minimizes the quotes you get back
             "quotesCount": 5,
-            # without this, the call will return several news results. This minimizes the news results
+            # this minimizes the news results you get back
             "newsCount": 0,
         }
 
@@ -63,13 +66,18 @@ class CompanyLookup():
         # store the response in JSON format for readability
         data = response.json()
 
-        # check the data for ticker, return an empty list if missing
+        # check the data for the "quotes" list (the list with the ticker). Return an empty list if missing
         quotes = data.get("quotes", [])
 
         if quotes:
             # the first list in quotes is the priority
-            # store the company and ticker into the dictionary
             ticker = quotes[0].get("symbol")
+
+            # store the company and ticker into the dictionary
             self.COMPANY_TICKERS[company_name] = ticker
+
+            # return the ticker
             return ticker
+        
+        # if nothing is found, return None
         return None

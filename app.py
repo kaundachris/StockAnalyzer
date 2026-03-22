@@ -9,37 +9,23 @@ import psycopg2.extras
 import bcrypt
 import os
 
-# check that the password is at least 6 characters long, contains at least one char, and one number
-
-
-def check_password(password):
-    has_digit = False
-    has_letter = False
-
-    # check that the password is at least 6 character long
-    if len(password) < 6:
-        return False
-
-    # check that the password has a number and letter
-    for char in password:
-        if char.isdigit():
-            has_digit = True
-        elif char.isalpha():
-            has_letter = True
-        if has_digit and has_letter:
-            return True
-    return False
-
 
 # create a database connection
 def get_db():
+    # environment variable used to protect the actual database location from attackers
     connection = psycopg2.connect(os.environ["DATABASE_URL"])
+
+    # commit any changes automatically
     connection.autocommit = True
+
     return connection
 
 
+# create the database with all the fields needed
 def initialize_db():
+    # open connection to database
     connection = get_db()
+
     with connection.cursor() as db:
         # create the users table
         db.execute("""CREATE TABLE IF NOT EXISTS users(
@@ -67,45 +53,12 @@ def initialize_db():
                 FOREIGN KEY(user_id) REFERENCES users(id),
                 UNIQUE(user_id, long_name)
                 )""")
+    
+    # close connection to database
     connection.close()
 
 
-
-# get all the search data to populate the history page
-def searches(sort_by=None, order="ASC"):
-    # ensure user is logged in
-    if "user_id" not in session:
-        return []
-    
-    # whitelist of sortable columns (prevents SQL injection)
-    valid_columns = [
-        "forward_pe", "earnings_growth", "profit_margins",
-        "price_book", "quick_ratio", "current_ratio", "free_cashflow"
-    ]
-    valid_orders = ["ASC", "DESC"]
-
-    if sort_by not in valid_columns:
-        sort_by = None
-    if order not in valid_orders:
-        order = "ASC"
-
-
-    connection = get_db()
-    with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as db:
-        # get searches related to the user id
-        if sort_by:
-            query = f"SELECT * FROM searches WHERE user_id = %s ORDER BY {sort_by} {order} NULLS LAST"
-            db.execute(query, (session["user_id"],))
-        else:
-            db.execute("SELECT * FROM searches WHERE user_id = %s", (session["user_id"],))
-        searches = db.fetchall()
-
-        connection.close()
-        return searches
-
-
-
-# to determine which link to show in the navigation
+# to determine which link to show in the navigation (login, logout, register)
 def status():
     if "user_id" in session:
         logged_in = True
@@ -146,6 +99,28 @@ def retrieve_stock_data(ticker: str):
         return None
 
 
+# check that the password meets security requirements
+def check_password(password):
+    has_digit = False
+    has_letter = False
+
+    # check that the password is at least 6 character long
+    if len(password) < 6:
+        return False
+
+    # check that the password has a number and letter
+    for char in password:
+        if char.isdigit():
+            has_digit = True
+        elif char.isalpha():
+            has_letter = True
+
+        ## if both of the above are true, exit early (saves time)
+        if has_digit and has_letter:
+            return True
+    return False
+
+
 # store data in database
 def store_data(data: dict):
     # store this in the database
@@ -160,12 +135,57 @@ def store_data(data: dict):
     connection.close()
 
 
+# get all the search data to populate the history page
+def searches(sort_by=None, order="ASC"):
+    # ensure user is logged in
+    if "user_id" not in session:
+        return []
+    
+    # whitelist of sortable columns (prevents SQL injection)
+    valid_columns = [
+        "forward_pe", "earnings_growth", "profit_margins",
+        "price_book", "quick_ratio", "current_ratio", "free_cashflow"
+    ]
 
+    # whitelist of allowable orders (prevents SQL injection)
+    valid_orders = ["ASC", "DESC"]
+
+
+    # validate the sort item selected
+    if sort_by not in valid_columns:
+        sort_by = None
+
+    # set the order item to "ASC always"
+    if order not in valid_orders:
+        order = "ASC"
+
+    #connect to database
+    connection = get_db()
+
+    with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as db:
+        # get searches related to the user id
+        if sort_by:
+            # if sort parameter present, sort the results
+            query = f"SELECT * FROM searches WHERE user_id = %s ORDER BY {sort_by} {order} NULLS LAST"
+            db.execute(query, (session["user_id"],))
+        else:
+            # if search parameter missing, return results as is
+            db.execute("SELECT * FROM searches WHERE user_id = %s", (session["user_id"],))
+        searches = db.fetchall()
+
+        # close connection to database
+        connection.close()
+
+        return searches
+
+
+# initialize the app
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY")
 initialize_db()
 
 
+# jinja will use this to format numbers into currency
 @app.template_filter("currency")
 def currency(value):
     if value is None:
@@ -175,18 +195,21 @@ def currency(value):
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    # if just landing on page
     if request.method == "GET":
         return render_template("index.html", logged_in=status())
 
     # get the user's input
     company = request.form.get("user_input")
 
-    # check that it's not empty
+    # check that user input is not empty
     if not company:
         return render_template("index.html", message="No ticker entered. Please enter a valid ticker!", logged_in=status())
 
     # retrieve the data
     stock_data = retrieve_stock_data(company)
+
+    # check that data is retrived successfully 
     if stock_data is None:
         return render_template("index.html", message="Could not find the ticker's data. Please make sure you enter a valid ticker!", logged_in=status())
 
@@ -198,12 +221,12 @@ def index():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    # if from other page
+    # if from other pages
     if request.method == "GET":
         return render_template("login.html")
 
-    username = request.form.get("username")
     # check that username field is not empty
+    username = request.form.get("username")
     if not username:
         return render_template("login.html", message="Please enter your username!")
     username = username.lower()
@@ -213,27 +236,30 @@ def login():
     if not password:
         return render_template("login.html", message="Please enter your username and password!")
 
-    
+    # check that the username and password exist in database
     connection = get_db()
     with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as db:
-        # check that the username exists in database
         db.execute("SELECT * FROM users WHERE username = %s", (username,))
         user = db.fetchone()
+
+        # check for existence of username
         if not user:
+            connection.close()
             return render_template("login.html", message="Invalid username or password!")
 
         # check that the password matches
         if not bcrypt.checkpw(password.encode("utf-8"), user["password_hash"].encode("utf-8")):
+            connection.close()
             return render_template("login.html", message="Invalid username or password!")
 
-        # store the last ticker
+        # store the user's last search
         stock = session.get("last_ticker")
 
         # Set user_id in session after successful login
         session.clear()
         session["user_id"] = user["id"]
 
-        # Store the user's search - if available - in their database
+        # Store the user's last search - if available - in their database
         if stock:
             # retrieve its data
             stock_data = retrieve_stock_data(stock)
@@ -242,6 +268,7 @@ def login():
             if stock_data:
                 store_data(stock_data)
         
+        # close database connection
         connection.close()
         return redirect("/history")
     
@@ -249,12 +276,12 @@ def login():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    # if from other page
+    # if from other pages
     if request.method == "GET":
         return render_template("register.html")
 
-    username = request.form.get("username")
     # check that username field is not empty
+    username = request.form.get("username")
     if not username:
         return render_template("register.html", message="Please enter your username!")
     username = username.lower()
@@ -274,7 +301,7 @@ def register():
         return render_template("register.html", message="Must contain at least one number and one letter")
 
     if password != confirm_password:
-        return render_template("register.html", message="Passwords dont match")
+        return render_template("register.html", message="Passwords don't match")
 
     connection = get_db()
     with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as db:
@@ -282,6 +309,7 @@ def register():
         db.execute("SELECT * FROM users WHERE username = %s", (username,))
         user = db.fetchone()
         if user:
+            connection.close()
             return render_template("register.html", message="Username exists! Log in please.")
 
         # hash the password
@@ -320,7 +348,7 @@ def register():
 def history():
     # check that the user is logged in
     if "user_id" not in session:
-        return render_template("login.html", message="Log in to save your searches")
+        return redirect("/login")
 
     if request.method == "GET":
         # populate the page
@@ -333,8 +361,8 @@ def history():
 
     # retrieve its data
     stock_data = retrieve_stock_data(stock)
-    if stock_data is None:
-        return render_template("history.html", history=searches(), message="Could not find the ticker's data. Please make sure you enter a valid ticker!", logged_in=status())
+    if not stock_data:
+        return render_template("history.html", history=searches(), message="Could not find the ticker's data. Please make sure you enter a valid ticker!")
 
     # store this in the database
     store_data(stock_data)
@@ -347,17 +375,17 @@ def history():
 def update():
     # check that the user is logged in
     if "user_id" not in session:
-        return render_template("login.html", message="Log in to save your searches")
+        return redirect("/login")
 
     # get the id of the stock to update
     stock_to_update = request.form.get("update")
     if not stock_to_update:
-        return render_template("history.html", message="Update failed. Please try again", logged_in=status())
+        return render_template("history.html", history=searches(), message="Update failed. Please try again")
 
     # retrieve the data
     stock_data = retrieve_stock_data(stock_to_update)
     if stock_data is None:
-        return render_template("history.html", history=searches(), message="Could not find the ticker's data. Please make sure you enter a valid ticker!", logged_in=status())
+        return render_template("history.html", history=searches(), message="Could not find the ticker's data. Please make sure you enter a valid ticker!")
 
     session["last_ticker"] = stock_to_update
 
@@ -367,18 +395,41 @@ def update():
     # render the page with the new entry
     return render_template("history.html", history=searches(), message="Data updated!")
 
+
+@app.route("/delete", methods=["POST"])
+def delete():
+    # check that the user is logged in
+    if "user_id" not in session:
+        return redirect("/login")
+
+    # get the id of the stock to delete
+    stock_to_delete = request.form.get("delete")
+    if not stock_to_delete:
+        return render_template("history.html", history=searches(), message="Delete failed. Please try again")
+
+    # delete the stock data
+    connection = get_db()
+    with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as db:
+        db.execute("DELETE FROM searches WHERE ticker = %s AND user_id = %s",
+                (stock_to_delete, session["user_id"]))
+    connection.close()
+
+    # render the page with the updated data
+    return render_template("history.html", history=searches(), message="Data updated!")
+
+
 @app.route("/sort", methods=["POST"])
 def sort():
     # check that the user is logged in
     if "user_id" not in session:
-        return render_template("login.html", message="Log in to sort your searches")
+        return redirect("/login")
 
     # get the id of the stock to update
     sort_by = request.form.get("sort")
     if not sort_by:
-        return render_template("history.html", message="Sort failed. Please try again", logged_in=status())
+        return render_template("history.html", history=searches(), message="Sort failed. Please try again")
 
-    # render the page with the new entry
+    # render the page with the sorted data 
     return render_template("history.html", history=searches(sort_by=sort_by, order="ASC"), message="Data updated!")
 
 

@@ -1,9 +1,14 @@
 #import the yfinance ticker
 from yfinance import Ticker
 
-
+"""
+    Pulls the company's financial data, if present
+    Picks the specific data needed
+    Cleans it up for presentation
+"""
 class Stock():
     def __init__(self, ticker:str):
+        # ticker the persistent item of the class
         self.ticker = ticker
         self._info = None
 
@@ -25,7 +30,10 @@ class Stock():
         if data.empty:
             raise ValueError(f"Data for {self.ticker} could not be found")
         
+        # set the data as a property of the object
         self._info = stock.info
+
+        # return the property
         return self._info
     
 
@@ -51,56 +59,56 @@ class Stock():
     
     # get the company's earnings growth
     def company_earnings_growth(self):
-        earnings_growth = self.info.get("earningsGrowth")
+        earnings_growth = self._get_info("earningsGrowth")
         if earnings_growth is not None:
             return round(earnings_growth * 100, 2)
         return 0
     
     # get the company's profit margin
     def company_profit_margin(self):
-        profit_margin = self.info.get("profitMargins")
+        profit_margin = self._get_info("profitMargins")
         if profit_margin is not None:
             return round(profit_margin * 100, 2)
         return 0
 
     # get the company's market capitalization
     def company_market_cap(self):
-        market_cap = self.info.get("marketCap")
+        market_cap = self._get_info("marketCap")
         if market_cap is not None:
             return market_cap
         return 0
     
     # get the company's price to book value
     def company_book_value(self):
-        book_value = self.info.get("bookValue")
+        book_value = self._get_info("bookValue")
         if book_value is not None:
             return round(book_value, 2)
         return 0
     
     # get the company's price to book ratio
     def company_pb_ratio(self):
-        pb_ratio = self.info.get("priceToBook")
+        pb_ratio = self._get_info("priceToBook")
         if pb_ratio is not None:
             return round(pb_ratio, 2)
         return 0
     
     # get the company's quick ratio
     def company_quick_ratio(self):
-        quick_ratio = self.info.get("quickRatio")
+        quick_ratio = self._get_info("quickRatio")
         if quick_ratio is not None:
             return round(quick_ratio, 2)
         return 0
     
     # get the company's current ratio
     def company_current_ratio(self):
-        current_ratio = self.info.get("currentRatio")
+        current_ratio = self._get_info("currentRatio")
         if current_ratio is not None:
             return round(current_ratio, 2)
         return 0
     
     # get the company's free cashflow 
     def company_free_cashflow(self):
-        free_cashflow = self.info.get("freeCashflow")
+        free_cashflow = self._get_info("freeCashflow")
         if free_cashflow is not None:
             return round(free_cashflow, 2)
         return 0
