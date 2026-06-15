@@ -340,6 +340,74 @@ def register():
         return redirect("/history")
 
 
+@app.route("/reset", methods=["GET", "POST"])
+def reset():
+    # if from other pages
+    if request.method == "GET":
+        return render_template("reset.html")
+
+    # check that username field is not empty
+    username = request.form.get("username")
+    if not username:
+        return render_template("reset.html", message="Please enter your username!")
+    username = username.lower()
+
+    # check that the password field is not empty
+    password = request.form.get("password")
+    if not password:
+        return render_template("reset.html", message="Please enter a password!")
+
+    # check that the confirm password field is not empty
+    confirm_password = request.form.get("confirm_password")
+    if not confirm_password:
+        return render_template("reset.html", message="Please confirm your password!")
+
+    # Check that password is at least 6 characters long and contains letters, digits and characters
+    if not check_password(password):
+        return render_template("reset.html", message="Must contain at least one number and one letter")
+
+    if password != confirm_password:
+        return render_template("reset.html", message="Passwords don't match")
+
+    connection = get_db()
+    with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as db:
+        # Ensure that the username exists in database
+        db.execute("SELECT * FROM users WHERE username = %s", (username,))
+        user = db.fetchone()
+
+        if not user:
+            return render_template("reset.html", message="Username does not exist")
+
+        # hash the password
+        hash_pw = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+
+        # add the new password to the user's database
+        db.execute("UPDATE users SET password_hash = %s WHERE username = %s",
+                (hash_pw.decode("utf-8"), username))
+
+        # get user's id
+        db.execute("SELECT * FROM users WHERE username = %s", (username,))
+        user = db.fetchone()
+
+        # Check that user has data
+        if user:
+            # Set user_id in session after successful login
+            session["user_id"] = user["id"]
+
+        # Store the user's search - if available - in their database
+        stock = session.get("last_ticker")
+        if stock:
+            # retrieve its data
+            stock_data = retrieve_stock_data(stock)
+        
+            # store this in the database
+            if stock_data:
+                store_data(stock_data)
+            
+        connection.close()
+
+        return redirect("/history")
+
 
 @app.route("/history", methods=["GET", "POST"])
 def history():
