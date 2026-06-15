@@ -371,9 +371,12 @@ def reset():
 
     connection = get_db()
     with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as db:
-        # check that the username does not exist in database
+        # Ensure that the username exists in database
         db.execute("SELECT * FROM users WHERE username = %s", (username,))
         user = db.fetchone()
+
+        if not user:
+            return render_template("reset.html", message="Username does not exist")
 
         # hash the password
         hash_pw = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
