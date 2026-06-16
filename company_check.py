@@ -1,11 +1,11 @@
 import yfinance as yf
 
-"""
-    Checks the existence of a company
-    If company exists, it returns the ticker of the company
-    If it doesn't, it returns None
-"""
 class CompanyLookup():
+    """
+        Checks the existence of a company
+        If company exists, it returns the ticker of the company
+        If it doesn't, it returns None
+    """
     def __init__(self):
         # Reduces the number of API calls by storing any searches made
         self.COMPANY_TICKERS = {
@@ -35,11 +35,12 @@ class CompanyLookup():
             # the first list in quotes is the priority
             ticker = quotes[0].get("symbol")
 
-            # store the company and ticker into the dictionary
-            self.COMPANY_TICKERS[company_name] = ticker
+            if ticker:
+                # store the company and ticker into the dictionary
+                self.COMPANY_TICKERS[company_name] = ticker
 
-            # return the ticker
-            return ticker
+                # return the ticker
+                return ticker
         
         # if nothing is found, return None
         return None

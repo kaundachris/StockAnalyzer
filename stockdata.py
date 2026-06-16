@@ -1,12 +1,13 @@
 #import the yfinance ticker
 from yfinance import Ticker
 
-"""
-    Pulls the company's financial data, if present
-    Picks the specific data needed
-    Cleans it up for presentation
-"""
+
 class Stock():
+    """
+        Pulls the company's financial data, if present
+        Picks the specific data needed
+        Cleans it up for presentation
+    """ 
     def __init__(self, ticker:str):
         # ticker the persistent item of the class
         self.ticker = ticker
