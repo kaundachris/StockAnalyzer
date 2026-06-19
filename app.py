@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from flask import Flask, render_template, request, redirect, session
 from stockdata import Stock
 from company_check import CompanyLookup
@@ -340,6 +343,74 @@ def register():
         return redirect("/history")
 
 
+@app.route("/reset", methods=["GET", "POST"])
+def reset():
+    # if from other pages
+    if request.method == "GET":
+        return render_template("reset.html")
+
+    # check that username field is not empty
+    username = request.form.get("username")
+    if not username:
+        return render_template("reset.html", message="Please enter your username!")
+    username = username.lower()
+
+    # check that the password field is not empty
+    password = request.form.get("password")
+    if not password:
+        return render_template("reset.html", message="Please enter a password!")
+
+    # check that the confirm password field is not empty
+    confirm_password = request.form.get("confirm_password")
+    if not confirm_password:
+        return render_template("reset.html", message="Please confirm your password!")
+
+    # Check that password is at least 6 characters long and contains letters, digits and characters
+    if not check_password(password):
+        return render_template("reset.html", message="Must contain at least one number and one letter")
+
+    if password != confirm_password:
+        return render_template("reset.html", message="Passwords don't match")
+
+    connection = get_db()
+    with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as db:
+        # Ensure that the username exists in database
+        db.execute("SELECT * FROM users WHERE username = %s", (username,))
+        user = db.fetchone()
+
+        if not user:
+            return render_template("reset.html", message="Username does not exist")
+
+        # hash the password
+        hash_pw = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+
+        # add the new password to the user's database
+        db.execute("UPDATE users SET password_hash = %s WHERE username = %s",
+                (hash_pw.decode("utf-8"), username))
+
+        # get user's id
+        db.execute("SELECT * FROM users WHERE username = %s", (username,))
+        user = db.fetchone()
+
+        # Check that user has data
+        if user:
+            # Set user_id in session after successful login
+            session["user_id"] = user["id"]
+
+        # Store the user's search - if available - in their database
+        stock = session.get("last_ticker")
+        if stock:
+            # retrieve its data
+            stock_data = retrieve_stock_data(stock)
+        
+            # store this in the database
+            if stock_data:
+                store_data(stock_data)
+            
+        connection.close()
+
+        return redirect("/history")
+
 
 @app.route("/history", methods=["GET", "POST"])
 def history():
@@ -425,9 +496,20 @@ def sort():
     sort_by = request.form.get("sort")
     if not sort_by:
         return render_template("history.html", history=searches(), message="Sort failed. Please try again")
+    
+    #retrive the current order 
+    current_order = session.get("order")
+
+    # If order is ascending, switch to descending
+    if current_order == "ASC":
+        session["order"] = "DESC"
+
+    #if order is NONE or descending, switch to ascending     
+    else:
+        session["order"] = "ASC"
 
     # render the page with the sorted data 
-    return render_template("history.html", history=searches(sort_by=sort_by, order="ASC"), message="Data updated!")
+    return render_template("history.html", history=searches(sort_by=sort_by, order=session["order"]), message="Data updated!")
 
 
 @app.route("/logout", methods=["GET", "POST"])
@@ -440,5 +522,6 @@ def logout():
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(debug=True)
+    # port = int(os.environ.get("PORT", 5000))
+    # app.run(host="0.0.0.0", port=port)
