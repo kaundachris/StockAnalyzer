@@ -493,9 +493,20 @@ def sort():
     sort_by = request.form.get("sort")
     if not sort_by:
         return render_template("history.html", history=searches(), message="Sort failed. Please try again")
+    
+    #retrive the current order 
+    current_order = session.get("order")
+
+    # If order is ascending, switch to descending
+    if current_order == "ASC":
+        session["order"] = "DESC"
+
+    #if order is NONE or descending, switch to ascending     
+    else:
+        session["order"] = "ASC"
 
     # render the page with the sorted data 
-    return render_template("history.html", history=searches(sort_by=sort_by, order="ASC"), message="Data updated!")
+    return render_template("history.html", history=searches(sort_by=sort_by, order=session["order"]), message="Data updated!")
 
 
 @app.route("/logout", methods=["GET", "POST"])
