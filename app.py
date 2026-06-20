@@ -221,6 +221,19 @@ def login():
     # if from other pages
     if request.method == "GET":
         return render_template("login.html")
+    
+    # get the user's login counter
+    # if the login counter hasn't been set, set it to zero
+    if not session.get("login_counter"):
+        session["login_counter"] = 0
+
+    # set the disabled parameter to false
+    disabled = False
+
+    # if the counter is two, disable the fields
+    if session["login_counter"] == 2:
+        disabled = True
+        return render_template("login.html", message="Contact support", disabled=disabled)
 
     # check that username field is not empty
     username = request.form.get("username")
@@ -242,11 +255,13 @@ def login():
         # check for existence of username
         if not user:
             connection.close()
+            session["login_counter"] += 1
             return render_template("login.html", message="Invalid username or password!")
 
         # check that the password matches
         if not bcrypt.checkpw(password.encode("utf-8"), user["password_hash"].encode("utf-8")):
             connection.close()
+            session["login_counter"] += 1
             return render_template("login.html", message="Invalid username or password!")
 
         # store the user's last search
