@@ -1,24 +1,36 @@
+/*global styling*/
 body {
     color: antiquewhite;
     background-color: black;
     padding: 10px;
     text-align: center;
-    font-size: large;
+    font-size: 1.08rem;
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
 }
 
+/*header styling*/
 header {
-    margin: 10px;
-    padding: 10px;
+    margin: 20px;
+    border-bottom: antiquewhite;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
 }
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/*main styling*/
 
 main {
     margin: 10px;
     padding: 10px;
 }
 
-footer {
-    margin: 10px;
-    padding: 10px;
+.more_info {
+    color:rgb(10, 136, 179);;
 }
 
 .notes {
@@ -30,6 +42,9 @@ footer {
     margin: 2px;
     padding: 10px;
     border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .nav {
@@ -107,18 +122,30 @@ tr:nth-child(odd) {
     background-color: rgb(30, 30, 30);
 }
 
+/*footer styling*/
+footer {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 150px;
+    margin-top: 20px;
+}
+
 .socials {
-    margin: 5px;
-    padding: 5px;
-    font-size:x-large;
-    transition: background-color 0.2s ease;
+    margin: 10px;
+    color: antiquewhite;
+    transition: .2s ease;
+    text-decoration: none;
 }
 
 .socials:hover {
-    color: lightblue;
-}
-
-.copyright {
-    margin: 10px;
-    padding: 10px;
+    color: white;
+    text-decoration: solid;
 }
