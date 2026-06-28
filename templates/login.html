@@ -20,15 +20,17 @@
 
 {% block main %} 
     <h1>Log In</h1>
-    <i>This allows you to keep a record of your searches for future reference</i>
+    <i class="more_info">This allows you to keep a record of your searches for future reference</i>
 
     <form class="page" action="/login" method="post">
         <div class="forms">
             <div>
-            <input type="email" name="username" id="username" autofocus autocomplete="off" placeholder="Enter your email">
+            <input type="email" name="username" id="username" autofocus autocomplete="off" placeholder="Enter your email"
+            {% if disabled %} disabled {% endif %}>
             </div>
             <div>
-            <input type="password" name="password" id="password" autofocus autocomplete="off" placeholder="Must contain at least one number and one letter">
+            <input type="password" name="password" id="password" autofocus autocomplete="off" placeholder="Must contain at least one number and one letter"
+            {% if disabled %} disabled {% endif %}>
             </div>
         </div>
         <div>
