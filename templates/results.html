@@ -33,7 +33,6 @@
 
 {% block main %}
 <h1>Company: {{ stock_data.long_name }}</h1>
-<div class="notes"></div>
 <table>
     <thead>
         <tr>
@@ -139,7 +138,6 @@
         </tr>
     </tbody>
 </table>
-</div>
 
 <form action="/history" method="post">
     <input type="text" name="history" id="history" hidden>
