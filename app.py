@@ -80,17 +80,17 @@ def retrieve_stock_data(ticker: str):
         # store the data for rendering
         stock_data = {}
         stock_data["ticker"] = ticker
-        stock_data["long_name"] = stock.company_name()
-        stock_data["industry"] = stock.company_industry()
-        stock_data["forward_pe"] = stock.company_forward_pe()
-        stock_data["earnings_growth"] = stock.company_earnings_growth()
-        stock_data["profit_margins"] = stock.company_profit_margin()
-        stock_data["market_cap"] = stock.company_market_cap()
-        stock_data["book_value"] = stock.company_book_value()
-        stock_data["price_book"] = stock.company_pb_ratio()
-        stock_data["quick_ratio"] = stock.company_quick_ratio()
-        stock_data["current_ratio"] = stock.company_current_ratio()
-        stock_data["free_cashflow"] = stock.company_free_cashflow()
+        stock_data["long_name"] = stock.company_name
+        stock_data["industry"] = stock.company_industry
+        stock_data["forward_pe"] = stock.company_forward_pe
+        stock_data["earnings_growth"] = stock.company_earnings_growth
+        stock_data["profit_margins"] = stock.company_profit_margin
+        stock_data["market_cap"] = stock.company_market_cap
+        stock_data["book_value"] = stock.company_book_value
+        stock_data["price_book"] = stock.company_pb_ratio
+        stock_data["quick_ratio"] = stock.company_quick_ratio
+        stock_data["current_ratio"] = stock.company_current_ratio
+        stock_data["free_cashflow"] = stock.company_free_cashflow
         return stock_data
     except Exception:
         return None
@@ -284,7 +284,6 @@ def login():
         connection.close()
         return redirect("/history")
     
-
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
