@@ -9,7 +9,7 @@ class Stock():
         Cleans it up for presentation
     """ 
     def __init__(self, ticker:str):
-        # ticker the persistent item of the class
+        # ticker is the persistent item of the class
         self.ticker = ticker
         self._info = None
 
@@ -43,14 +43,17 @@ class Stock():
         return self.info.get(key)
    
     # Get the company's name
+    @property
     def company_name(self):
         return self._get_info("longName") or "N/A" 
     
     # get the company's industry
+    @property
     def company_industry(self):
         return self._get_info("industry") or "N/A" 
     
     # get the company's foward PE
+    @property
     def company_forward_pe(self):
         forwardPE = self._get_info("forwardPE")
         if forwardPE is not None:
@@ -59,6 +62,7 @@ class Stock():
             return 0
     
     # get the company's earnings growth
+    @property
     def company_earnings_growth(self):
         earnings_growth = self._get_info("earningsGrowth")
         if earnings_growth is not None:
@@ -66,6 +70,7 @@ class Stock():
         return 0
     
     # get the company's profit margin
+    @property
     def company_profit_margin(self):
         profit_margin = self._get_info("profitMargins")
         if profit_margin is not None:
@@ -73,6 +78,7 @@ class Stock():
         return 0
 
     # get the company's market capitalization
+    @property
     def company_market_cap(self):
         market_cap = self._get_info("marketCap")
         if market_cap is not None:
@@ -80,6 +86,7 @@ class Stock():
         return 0
     
     # get the company's price to book value
+    @property
     def company_book_value(self):
         book_value = self._get_info("bookValue")
         if book_value is not None:
@@ -87,6 +94,7 @@ class Stock():
         return 0
     
     # get the company's price to book ratio
+    @property
     def company_pb_ratio(self):
         pb_ratio = self._get_info("priceToBook")
         if pb_ratio is not None:
@@ -94,6 +102,7 @@ class Stock():
         return 0
     
     # get the company's quick ratio
+    @property
     def company_quick_ratio(self):
         quick_ratio = self._get_info("quickRatio")
         if quick_ratio is not None:
@@ -101,13 +110,15 @@ class Stock():
         return 0
     
     # get the company's current ratio
+    @property
     def company_current_ratio(self):
         current_ratio = self._get_info("currentRatio")
         if current_ratio is not None:
             return round(current_ratio, 2)
         return 0
     
-    # get the company's free cashflow 
+    # get the company's free cashflow
+    @property
     def company_free_cashflow(self):
         free_cashflow = self._get_info("freeCashflow")
         if free_cashflow is not None:
