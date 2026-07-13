@@ -2,8 +2,6 @@
 
 Stock Analyzer is a Flask-based web application that lets users explore basic fundamental stock data and save their research over time. The project is designed as a portfolio piece that demonstrates both software engineering fundamentals and practical finance knowledge.
 
-**Site:** https://www.onceingolconda.com
-
 **Live Demo:** https://youtu.be/okp5wamPM60
 
 ## What this project does
