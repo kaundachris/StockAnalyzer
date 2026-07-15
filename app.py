@@ -58,10 +58,9 @@ def initialize_db():
 # to determine which link to show in the navigation (login, logout, register)
 def status():
     if "user_id" in session:
-        logged_in = True
+        return True
     else:
-        logged_in = False
-    return logged_in
+        return False
 
 
 # retreive stock data and store in a usable format
@@ -91,6 +90,7 @@ def retrieve_stock_data(ticker: str):
         stock_data["quick_ratio"] = stock.company_quick_ratio
         stock_data["current_ratio"] = stock.company_current_ratio
         stock_data["free_cashflow"] = stock.company_free_cashflow
+        stock_data["price_chart"] = stock.price_chart
         return stock_data
     except Exception:
         return None
@@ -152,7 +152,7 @@ def searches(sort_by=None, order="ASC"):
     if sort_by not in valid_columns:
         sort_by = None
 
-    # set the order item to "ASC always"
+    # set the order item to "ASC" always
     if order not in valid_orders:
         order = "ASC"
 

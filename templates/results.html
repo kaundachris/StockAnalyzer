@@ -33,6 +33,11 @@
 
 {% block main %}
 <h1>Company: {{ stock_data.long_name }}</h1>
+
+<div>
+    {{ stock_data.price_chart | safe }}
+</div>
+
 <table>
     <thead>
         <tr>
