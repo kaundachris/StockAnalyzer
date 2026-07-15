@@ -182,8 +182,3 @@ def searches(sort_by=None, order="ASC"):
         connection.close()
 
         return searches
-
-
-
-
-
