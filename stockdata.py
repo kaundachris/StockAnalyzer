@@ -1,4 +1,4 @@
-#import dependanciles
+#import dependancies
 from yfinance import Ticker
 import plotly.express as px
 
